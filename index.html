@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Tiger Jump</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://unpkg.com/@tonconnect/ui@2.0.6/dist/tonconnect-ui.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<!-- ===== MONETAG REWARDED ADS (zone 11804480) ===== -->
+<script src='//libtl.com/sdk.js' data-zone='11804480' data-sdk='show_11804480'></script>
+<style>
+:root{
+  --bg:#0d0a06; --panel:#171009; --panel2:#201709; --line:#2e2213; --line2:#3d2d18;
+  --amber:#ffb020; --amber2:#e08c07; --text:#f6edda; --mut:#a08a68; --dim:#6e5c42;
+  --mint:#57d9a3; --coral:#ff7847; --red:#ff5d49;
+  --r:16px; --nav-h:64px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:#060402;color:var(--text);font-family:'Sora',sans-serif;overflow:hidden}
+button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer}
+input,textarea{font-family:inherit}
+.ic{width:20px;height:20px;flex:none;display:block}
+.ic-s{width:15px;height:15px}
+.ic-img{width:18px;height:18px;border-radius:50%;flex:none}
+::selection{background:var(--amber);color:#140c02}
+#shell{max-width:480px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;position:relative;background:var(--bg);box-shadow:0 0 0 1px #1b1206}
+#hdr{padding:calc(env(safe-area-inset-top) + 28px) 14px 6px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;border-bottom:1px solid var(--line);background:var(--bg);z-index:5}
+#hdr .chips{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:nowrap;margin-bottom:2px}
+.chip{display:flex;align-items:center;gap:5px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:5px 9px;font-size:11px;font-weight:600}
+.chip:active{transform:scale(.95)}
+.chip.w{border-color:var(--amber);color:var(--amber);font-weight:700}
+#views{flex:1;position:relative;overflow:hidden}
+.view{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:14px 14px 24px;display:none;animation:vin .22s ease}
+.view.on{display:block}
+@keyframes vin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.view::-webkit-scrollbar{width:0}
+#nav{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line);background:#0b0805;padding-bottom:env(safe-area-inset-bottom);z-index:5}
+#nav button{padding:9px 0 7px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--dim);position:relative;transition:color .15s}
+#nav button span{font-size:8.5px;font-weight:600;letter-spacing:.04em}
+#nav button .ic{width:21px;height:21px}
+#nav button.on{color:var(--amber)}
+#nav button.on::before{content:"";position:absolute;top:-1px;left:22%;right:22%;height:2px;background:var(--amber);border-radius:2px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.sec-t{display:flex;align-items:center;gap:8px;margin:18px 2px 10px;font-family:'Russo One';font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.sec-t .ic{color:var(--amber)}
+.sec-t::after{content:"";flex:1;height:1px;background:var(--line)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--amber);color:#170e01;font-weight:700;font-size:13px;border-radius:12px;padding:12px 16px;width:100%;transition:transform .1s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--panel2);color:var(--text);border:1px solid var(--line2)}
+.btn.danger{background:#2a120c;color:var(--red);border:1px solid #4a1d13}
+.btn:disabled{opacity:.45;pointer-events:none}
+.row{display:flex;align-items:center;gap:10px}
+.grow{flex:1;min-width:0}
+.mut{color:var(--mut)}.sm{font-size:11px}.xs{font-size:10px}
+.pill{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:var(--panel2);border:1px solid var(--line2);color:var(--mut)}
+.pill.a{color:var(--amber);border-color:#4d3512}
+.pill.g{color:var(--mint);border-color:#1d4234}
+.pill.c{color:var(--coral);border-color:#4b2413}
+.sw{width:42px;height:24px;border-radius:14px;background:#241a0d;border:1px solid var(--line2);position:relative;flex:none;transition:.2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--dim);transition:.2s}
+.sw.on{background:#4a3208;border-color:var(--amber2)}
+.sw.on::after{left:20px;background:var(--amber)}
+.lrow{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid var(--line)}
+.lrow:last-child{border-bottom:0}
+.tile{width:42px;height:42px;border-radius:12px;background:var(--panel2);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;color:var(--amber);flex:none}
+.tile .ic{width:20px;height:20px}
+.nb{font-weight:700;font-size:13px}
+.price{display:inline-flex;align-items:center;gap:4px;font-family:'Russo One';font-size:12px;color:var(--amber)}
+.sbtn{background:var(--panel2);border:1px solid var(--line2);color:var(--text);font-weight:700;font-size:11px;padding:8px 12px;border-radius:10px;display:flex;align-items:center;gap:5px;flex:none}
+.sbtn.gold{background:var(--amber);color:#170e01;border-color:var(--amber)}
+.sbtn:active{transform:scale(.95)}
+.sbtn:disabled{opacity:.4}
+.pips{display:flex;gap:3px;margin-top:5px}
+.pip{width:12px;height:4px;border-radius:2px;background:#2b2010}
+.pip.f{background:var(--amber)}
+#v-game{padding:0;overflow:hidden}
+#gameWrap{position:absolute;inset:0}
+#cv{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+#hud{position:absolute;inset:0;pointer-events:none;padding:12px 14px;display:flex;flex-direction:column}
+.hud-top{display:flex;align-items:flex-start;gap:8px}
+.hud-h{font-family:'Russo One';font-size:30px;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.hud-h small{font-size:12px;color:var(--mut)}
+.hud-r{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.energy{width:110px;height:16px;border:1px solid var(--line2);border-radius:9px;background:rgba(13,10,6,.75);overflow:hidden;display:flex;align-items:center;position:relative}
+.energy i{display:block;height:100%;background:var(--amber);transition:width .15s}
+.energy b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:'Russo One';color:#fff;text-shadow:0 1px 2px #000}
+#gameMsg{position:absolute;left:0;right:0;top:42%;text-align:center;font-family:'Russo One';color:var(--mut);pointer-events:none}
+#toasts{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:100;pointer-events:none}
+.toast{display:flex;align-items:center;gap:8px;background:#221809;border:1px solid var(--line2);color:var(--text);font-size:12px;font-weight:600;padding:10px 16px;border-radius:12px;max-width:86%;animation:tin .25s ease;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.toast.err{border-color:#5a2317;color:#ffb4a8}
+.toast.ok{border-color:#1d4234;color:#a9efd2}
+@keyframes tin{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin 1s linear infinite}
+#shade{position:fixed;inset:0;background:rgba(4,2,0,.7);backdrop-filter:blur(3px);z-index:60;display:none}
+#shade.on{display:block;animation:fin .2s}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+#sheets{position:fixed;left:0;right:0;bottom:0;z-index:70;display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.sheet{pointer-events:auto;width:100%;max-width:480px;background:#181008;border:1px solid var(--line2);border-bottom:0;border-radius:22px 22px 0 0;padding:18px 18px calc(env(safe-area-inset-bottom) + 18px);animation:sup .28s cubic-bezier(.2,.9,.3,1);max-height:82dvh;overflow-y:auto}
+@keyframes sup{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+.sh-bar{width:38px;height:4px;border-radius:3px;background:var(--line2);margin:0 auto 14px}
+.sh-t{font-family:'Russo One';font-size:16px;letter-spacing:.03em;margin-bottom:4px;display:flex;align-items:center;gap:9px}
+.sh-t .ic{color:var(--amber)}
+.big{font-family:'Russo One';font-size:30px}
+.trow{display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid var(--line)}
+.trow:last-child{border:0}
+.av{width:42px;height:42px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);object-fit:cover;flex:none}
+.av-sm{width:32px;height:32px;font-size:12px}
+.av-ph{display:flex;align-items:center;justify-content:center;font-family:'Russo One';color:var(--amber)}
+.streak{display:flex;gap:6px;margin:10px 0}
+.sd{flex:1;height:44px;border-radius:10px;background:var(--panel2);border:1px solid var(--line2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:9px;color:var(--dim)}
+.sd.done{border-color:var(--amber2);color:var(--amber)}
+.sd .ic{width:13px;height:13px}
+.inp{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:12px;color:var(--text);padding:12px;font-size:13px;outline:none}
+.inp:focus{border-color:var(--amber2)}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+#splash{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+#splash .mark{width:84px;height:84px;animation:pulse 1.4s ease infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+#splash b{font-family:'Russo One';letter-spacing:.2em;font-size:15px}
+#splash span{font-size:10px;color:var(--dim);letter-spacing:.3em}
+.tier{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.tier:last-child{border:0}
+.rankrow{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:14px;border:1px solid var(--line);background:var(--panel);margin-bottom:8px}
+.rankrow.me{border-color:var(--amber2)}
+.rn{font-family:'Russo One';width:26px;text-align:center;color:var(--mut)}
+.rn.top{color:var(--amber)}
+
+@media (min-height:760px){.hud-h{font-size:34px}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+<defs>
+<symbol id="i-paw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7.5" r="1.8"/><circle cx="12" cy="5.8" r="1.8"/><circle cx="17" cy="7.5" r="1.8"/><path d="M12 11c-3.2 0-5.6 2.6-5.6 5.2 0 1.6 1.2 2.8 2.8 2.8 1 0 1.8-.4 2.8-.4s1.8.4 2.8.4c1.6 0 2.8-1.2 2.8-2.8 0-2.6-2.4-5.2-5.6-5.2z"/></symbol>
+<symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 8z"/><path d="M8.5 8V6.5a3.5 3.5 0 0 1 7 0V8"/></symbol>
+<symbol id="i-tasks" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3.2"/><path d="U3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M16 5.6a3.2 3.2 0 0 1 0 5.8M17.8 14.9c1.7.8 2.7 2.4 2.7 4.6"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5v-9z"/><path d="M15 12h5v3.5h-5a1.75 1.75 0 1 1 0-3.5z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c.8-3.4 3.6-5.2 7-5.2s6.2 1.8 7 5.2"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M13 3L5 13.5h5.5L11 21l8-10.5h-5.5L13 3z"/></symbol>
+<symbol id="i-gem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 4h10l4 5.5L12 20.5 3 9.5 7 4z"/><path d="M3 9.5h18M9.5 9.5L12 20.5 14.5 9.5M7 4l2.5 5.5M17 4l-2.5 5.5"/></symbol>
+<symbol id="i-tgr" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" fill="currentColor"/><circle cx="12" cy="12" r="9.5" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="1.6"/><g fill="#0d0a06" opacity=".85"><circle cx="9.1" cy="9.7" r="1.15"/><circle cx="12" cy="8.7" r="1.15"/><circle cx="14.9" cy="9.7" r="1.15"/><path d="M12 11.3c-2.5 0-4.3 2-4.3 3.9 0 1.2.9 2.1 2.1 2.1.8 0 1.5-.3 2.2-.3s1.4.3 2.2.3c1.2 0 2.1-.9 2.1-2.1 0-1.9-1.8-3.9-4.3-3.9z"/></g></symbol>
+<symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".4" fill="currentColor"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5.5 14.5h-.2A1.8 1.8 0 0 1 3.5 12.7V6a2.5 2.5 0 0 1 2.5-2.5h6.7a1.8 1.8 0 0 1 1.8 1.8v.2"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></symbol>
+<symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 5.5H4.5v1a3.5 3.5 0 0 0 3 3.4M17 5.5h2.5v1a3.5 3.5 0 0 1-3 3.4M12 14v3.5M8.5 20.5h7M12 17.5c-1.2 0-2 .8-2.2 3h4.4c-.2-2.2-1-3-2.2-3z"/></symbol>
+<symbol id="i-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="4"/><path d="M6 13v6.5h12V13M12 9v10.5M12 9C10.5 9 7.5 8.6 7.5 6.4 7.5 4.9 8.7 4 9.9 4c1.7 0 2.1 2.5 2.1 5zm0 0c1.5 0 4.5-.4 4.5-2.6C16.5 4.9 15.3 4 14.1 4 12.4 4 12 6.5 12 9z"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4.2 4.2 0 0 0 6 0l3-3a4.24 4.24 0 0 0-6-6l-1.4 1.4"/><path d="M14 10a4.2 4.2 0 0 0-6 0l-3 3a4.24 4.24 0 0 0 6 6l1.4-1.4"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3.5l1 2.2 2.4-.5 1 2.1 2.3.8-.5 2.4 1.7 1.7-1.7 1.7.5 2.4-2.3.8-1 2.1-2.4-.5-1 2.2-1-2.2-2.4.5-1-2.1-2.3-.8.5-2.4L4 12l1.7-1.7-.5-2.4 2.3-.8 1-2.1 2.4.5 1-2.2z"/></symbol>
+<symbol id="i-vol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4v-5z"/><path d="M15.5 9a4.3 4.3 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/></symbol>
+<symbol id="i-vibe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="4" width="8" height="16" rx="2"/><path d="M4.5 9v6M19.5 9v6"/></symbol>
+<symbol id="i-ticket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 8.5V6.5h16v2a2 2 0 0 0 0 4v4a2 2 0 0 0 0 2.5H4A2 2 0 0 0 4 16.5v-4a2 2 0 0 0 0-4z" transform="translate(0 1)"/><path d="M14 8v9" stroke-dasharray="2.5 2.5"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5M5.5 11.5L12 5l6.5 6.5"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.5"/><circle cx="17.5" cy="5.5" r="2.5"/><circle cx="17.5" cy="18.5" r="2.5"/><path d="M8.3 10.8l7-4M8.3 13.2l7 4"/></symbol>
+<symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c1 2.5 5 4.5 5 9a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 1.5.6 2.3 1.5 2.7-.4-2.7.2-5.4 1.5-7.2z"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="3"/><path d="M10 9l5 3-5 3V9z"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-max" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3.5H4.5V7M16 3.5h3.5V7M8 20.5H4.5V17M16 20.5h3.5V17"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5.5" y="10.5" width="13" height="9" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></symbol>
+</defs>
+</svg>
+
+<svg width="0" height="0" style="position:absolute">
+<symbol id="tiger-mark" viewBox="0 0 48 48">
+  <path d="M9 15c0-4 1.4-7.5 3.2-9.6C14 7.2 16.4 9 19 9h10c2.6 0 5-1.8 6.8-3.6C37.6 7.5 39 11 39 15c0 12-6.6 20.5-15 25C15.6 35.5 9 27 9 15z" fill="#ffb020"/>
+  <path d="M10.5 12.5c1-3 2.3-5.4 3.4-6.6C15.6 7.4 17.4 9 19 9h2.5c-2.5 1-4.5 2.5-6 4.5l-5-1zM37.5 12.5c-1-3-2.3-5.4-3.4-6.6C32.4 7.4 30.6 9 29 9h-2.5c2.5 1 4.5 2.5 6 4.5l5-1z" fill="#171009"/>
+  <path d="M24 13l-2.2 4.5h4.4L24 13zM15 17l1.6 3.6 2.6-1.4L15 17zM33 17l-1.6 3.6-2.6-1.4L33 17z" fill="#171009"/>
+  <path d="M13.5 22.5c1.8 1 3.5 1.2 5 .6M34.5 22.5c-1.8 1-3.5 1.2-5 .6" stroke="#171009" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <ellipse cx="18.5" cy="24.5" rx="2.6" ry="3" fill="#171009"/><circle cx="19.3" cy="23.5" r=".9" fill="#fff"/>
+  <ellipse cx="29.5" cy="24.5" rx="2.6" ry="3" fill="#171009"/><circle cx="30.3" cy="23.5" r=".9" fill="#fff"/>
+  <path d="M22 29.5c.6 1 1.4 1.5 2 1.5s1.4-.5 2-1.5" stroke="#171009" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M24 31.5v2.2M21 34c.8.8 1.9 1.2 3 1.2s2.2-.4 3-1.2" stroke="#171009" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  <path d="M17 39.5c2 1.8 4.4 3.4 7 4.7 2.6-1.3 5-2.9 7-4.7-2 .7-4.4 1.1-7 1.1s-5-.4-7-1.1z" fill="#171009"/>
+</symbol>
+</svg>
+
+<div id="splash">
+  <svg class="mark"><use href="#tiger-mark"/></svg>
+  <b>TIGER JUMP</b><span>LOADING</span>
+</div>
+
+<div id="shell">
+  <header id="hdr">
+    <div class="chips">
+      <button class="chip" data-goto="wallet" id="chipTon"><img class="ic-img" id="tonIco1" alt=""><b id="hTon">0</b></button>
+      <button class="chip" data-goto="wallet"><svg class="ic ic-s" style="color:var(--mint)"><use href="#i-tgr"/></svg><b id="hTgr">0</b></button>
+      <button class="chip" data-goto="wallet"><svg class="ic ic-s" style="color:var(--coral)"><use href="#i-bolt"/></svg><b id="hBoost">0</b></button>
+    </div>
+  </header>
+
+  <div id="views">
+    <section class="view on" id="v-game">
+      <div id="gameWrap">
+        <canvas id="cv"></canvas>
+        <div id="hud">
+          <div class="hud-top">
+            <div class="hud-h"><span id="hudH">0</span><small> m</small></div>
+            <div class="hud-r">
+              <div class="chip"><svg class="ic ic-s" style="color:var(--amber)"><use href="#i-paw"/></svg><b id="hudStep">0</b></div>
+              <div class="energy"><i id="enBar" style="width:100%"></i><b id="enTxt">100 / 100</b></div>
+            </div>
+          </div>
+          <div id="gameMsg">TAP TO START · HOLD &amp; DRAG TO STEER</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="v-store">
+      <div class="row" style="gap:6px;margin-bottom:14px" id="storeTabs"></div>
+      <div id="storeBody"></div>
+    </section>
+
+    <section class="view" id="v-tasks">
+      <div class="sec-t"><svg class="ic"><use href="#i-flame"/></svg>Daily Login Streak</div>
+      <div class="card" id="streakCard"></div>
+      <div class="sec-t"><svg class="ic"><use href="#i-tasks"/></svg>Missions</div>
+      <div class="card" id="missionList" style="padding:4px 14px"></div>
+      <div class="sec-t"><svg class="ic"><use href="#i-gift"/></svg>Special Tasks</div>
+      <div id="specialTasks"></div>
+    </section>
+
+    <section class="view" id="v-refs">
+      <div class="sec-t"><svg class="ic"><use href="#i-users"/></svg>Invite &amp; Earn</div>
+      <div class="card">
+        <div class="nb" style="margin-bottom:4px">Your invite link</div>
+        <div class="xs mut" style="margin-bottom:10px">Friends open the bot with your link — you get <b style="color:var(--mint)">5,000 TGR</b> + <b style="color:var(--coral)">500 Boosts</b> per join, plus 3-tier commission on everything they spend in the Store.</div>
+        <div class="row" style="gap:6px">
+          <input class="inp" id="refLink" readonly style="font-size:11px">
+          <button class="sbtn gold" id="copyRef"><svg class="ic ic-s"><use href="#i-copy"/></svg></button>
+          <button class="sbtn" id="shareRef"><svg class="ic ic-s"><use href="#i-share"/></svg></button>
+        </div>
+      </div>
+      <div class="row" style="gap:8px;margin-bottom:12px">
+        <div class="card grow" style="margin:0;text-align:center"><div class="big" id="refCount" style="color:var(--amber)">0</div><div class="xs mut">Referrals</div></div>
+        <div class="card grow" style="margin:0;text-align:center"><div class="big" id="refEarnTot" style="color:var(--mint)">0</div><div class="xs mut">TON earned</div></div>
+      </div>
+      
+      <div class="sec-t"><svg class="ic"><use href="#i-users"/></svg>Your Referrals</div>
+      <div class="card" id="refList" style="padding:4px 14px"></div>
+
+      <div class="sec-t"><svg class="ic"><use href="#i-trophy"/></svg>3-Tier Commission</div>
+      <div class="card" id="tierBox" style="padding:4px 14px"></div>
+      
+      <div class="sec-t"><svg class="ic"><use href="#i-gift"/></svg>Commission Earned</div>
+      <div class="card" id="refHistList" style="padding:4px 14px"></div>
+
+      <div class="card" style="border-style:dashed">
+        <div class="xs mut" style="line-height:1.7">Tier 1 — your direct referrals pay you a share of every TON purchase they make in the Store. Tier 2 and Tier 3 follow the same chain two levels deeper. Commissions are credited to your TON balance instantly.</div>
+      </div>
+    </section>
+
+    <section class="view" id="v-wallet">
+      <div class="sec-t"><svg class="ic"><use href="#i-wallet"/></svg>Balances</div>
+      <div class="card" id="balBox" style="padding:4px 14px"></div>
+      <div class="sec-t"><svg class="ic"><use href="#i-up"/></svg>Withdraw TON</div>
+      <div class="card">
+        <div class="row" style="margin-bottom:10px; align-items: flex-start;">
+          <div class="grow">
+            <div class="row" style="gap:6px; align-items:center; margin-bottom:5px;">
+              <div class="xs mut">WALLET ADDRESS</div>
+              <button class="sbtn" style="padding:2px 4px;" data-info="withdraw"><svg class="ic ic-s"><use href="#i-info"/></svg></button>
+            </div>
+            <div class="nb" id="wdAddr" style="font-size:12px;word-break:break-all;color:var(--mut)">Not connected</div>
+            <div class="xs mut" style="margin-top:6px; line-height:1.4;">Minimum withdrawal: <b>0.01 TON</b>. You can make <b>1 withdrawal per day</b>.<br><span style="color:var(--coral)">After your 1st free withdrawal, a Store purchase is required to withdraw again.</span></div>
+          </div>
+          <button class="sbtn" id="wdCopy" style="display:none"><svg class="ic ic-s"><use href="#i-copy"/></svg></button>
+        </div>
+        <div class="row" style="margin-bottom:10px; flex-direction: column; gap: 10px;">
+          <button class="btn ghost" id="wdConn" style="border-color: var(--amber); color: var(--amber);"><svg class="ic ic-s"><use href="#i-wallet"/></svg><span id="wdConnTxt">Connect TON Wallet</span></button>
+          <button class="btn danger" id="wdDisc" style="display:none;"><svg class="ic ic-s"><use href="#i-x"/></svg>Disconnect Wallet</button>
+        </div>
+        <div class="field">
+          <label>Amount (TON)</label>
+          <div class="row" style="gap:6px">
+            <input class="inp" id="wdAmt" type="number" step="0.0000001" placeholder="0.00" inputmode="decimal">
+            <button class="sbtn" id="wdMax"><svg class="ic ic-s"><use href="#i-max"/></svg>Max</button>
+          </div>
+        </div>
+        <div class="row" style="justify-content:space-between;padding:8px 2px 12px">
+          <div class="sm" style="font-weight:600">Use a different address</div>
+          <button class="sw" id="wdSwitch"></button>
+        </div>
+        <div class="field" id="wdCustomWrap" style="display:none">
+          <label>Custom TON address</label>
+          <input class="inp" id="wdCustom" placeholder="UQ…" spellcheck="false">
+        </div>
+        <button class="btn" id="wdConfirm"><svg class="ic ic-s"><use href="#i-up"/></svg>Confirm Withdraw</button>
+      </div>
+      <div class="sec-t"><svg class="ic"><use href="#i-clock"/></svg>History</div>
+      <button class="btn ghost" id="openHistBtn" style="margin-bottom:12px"><svg class="ic ic-s"><use href="#i-clock"/></svg>View Full History<svg class="ic ic-s" style="margin-left:auto"><use href="#i-chev"/></svg></button>
+      <div class="card" id="histBox" style="padding:4px 14px"></div>
+    </section>
+
+    <section class="view" id="v-prof">
+      <div class="card">
+        <div class="row">
+          <img class="av" id="pAv" style="display:none" alt="">
+          <div class="av av-ph" id="pAvPh" style="width:42px;height:42px">T</div>
+          <div class="grow">
+            <div class="nb" id="pName">—</div>
+            <div class="xs mut" id="pUser">—</div>
+          </div>
+          <div class="pill a" id="pLevel">LVL 1</div>
+        </div>
+        <div style="border-top:1px solid var(--line);margin-top:12px;padding-top:10px">
+          <div class="row sm"><span class="mut" style="width:100px">Telegram ID</span><b>*******</b></div>
+        </div>
+      </div>
+      <button class="btn ghost" id="rankBtn" style="margin-bottom:12px"><svg class="ic ic-s"><use href="#i-trophy"/></svg>Global Ranking — Top 25<svg class="ic ic-s" style="margin-left:auto"><use href="#i-chev"/></svg></button>
+      <div class="sec-t"><svg class="ic"><use href="#i-bolt"/></svg>Level Up</div>
+      <div class="card">
+        <div class="row">
+          <div class="tile"><svg class="ic"><use href="#i-up"/></svg></div>
+          <div class="grow">
+            <div class="nb">Level <span id="lvNow">1</span></div>
+            <div class="xs mut">Next level costs <b id="lvCost" style="color:var(--coral)">500</b> Boosts</div>
+          </div>
+          <button class="sbtn gold" id="lvBtn">Level Up</button>
+        </div>
+      </div>
+      <div class="sec-t"><svg class="ic"><use href="#i-ticket"/></svg>Redeem Code</div>
+      <div class="card">
+        <div class="row" style="gap:6px">
+          <input class="inp" id="codeInp" placeholder="Enter code" style="text-transform:uppercase">
+          <button class="sbtn gold" id="codeBtn">Claim</button>
+        </div>
+      </div>
+      <div class="sec-t"><svg class="ic"><use href="#i-gear"/></svg>Settings</div>
+      <div class="card" id="setBox" style="padding:4px 14px"></div>
+    </section>
+
+    <section class="view" id="v-rank">
+      <div id="rankList"></div>
+    </section>
+
+    <section class="view" id="v-hist">
+      <div class="sec-t"><svg class="ic"><use href="#i-clock"/></svg>Full History</div>
+      <div class="card" id="fullHistBox" style="padding:4px 14px"></div>
+    </section>
+  </div>
+
+  <nav id="nav"></nav>
+</div>
+
+<div id="shade"></div>
+<div id="sheets"></div>
+<div id="toasts"></div>
+
+<script>
+/* ================================================================
+   TIGER JUMP — Telegram Mini App (FIXED VERSION)
+   ================================================================ */
+const CONFIG = {
+  FIREBASE: { 
+    apiKey: "AIzaSyBOMgByf1dTx74qVS37CRh9avSnv66Jir4",
+    authDomain: "tiger-jump-e8036.firebaseapp.com",
+    databaseURL: "https://tiger-jump-e8036-default-rtdb.firebaseio.com",
+    projectId: "tiger-jump-e8036",
+    storageBucket: "tiger-jump-e8036.firebasestorage.app",
+    messagingSenderId: "659413737526",
+    appId: "1:659413737526:web:665279b2a007b3c156f897",
+    measurementId: "G-41ZWT970TD"
+  },
+  TREASURY: "UQBPy4IAdfic5Na4iQ-FM5_xXVTLj9lWlBAMby8jRf23Ca9N",
+  MANIFEST: "https://tigerjump.vercel.app/tonconnect-manifest.json",
+  BOT_USERNAME: "Tiger_Jump_Bot",
+  BOT_LINK: "http://t.me/Tiger_Jump_Bot/play",
+  APP_SLUG: "play",
+  MONETAG_ZONE: "11804480",
+  TON_LOGO: "https://i.postimg.cc/NfL9dg9n/Gram-Diamond-Mark.png",
+  BOT_API_KEY: "",
+  COMMISSION: [0.10, 0.03, 0.01],
+  JOIN_BONUS: { tgr: 5000, boosts: 500 },
+  MIN_WITHDRAW: 0.01
+};
+
+/* ========== MANDATORY CHANNEL VERIFICATION ========== */
+const REQUIRED_CHANNELS = [
+  { name: 'Announcement Channel', link: 'https://t.me/TigerJump_Ann', chatId: '@TigerJump_Ann' },
+  { name: 'Payout Channel', link: 'https://t.me/Tiger_Jump_Payout', chatId: '@Tiger_Jump_Payout' },
+  { name: 'Chat Group', link: 'https://t.me/TigerJump_Chat', chatId: '@TigerJump_Chat' },
+  { name: 'DEV Crypto Channel', link: 'https://t.me/DevilHuntingCrypto', chatId: '@DevilHuntingCrypto' }
+];
+const BOT_TOKEN = '8413250534:AAGElFdfN0V6dcTrmYoTeI_0TJdttnay9GM';
+
+async function checkChannelMembership() {
+  // Allow bypass if no tgUser (e.g., local testing without Telegram WebApp)
+  if (!tgUser || !tgUser.id) {
+    console.warn('No Telegram user ID found. Allowing bypass for local testing.');
+    return true; 
+  }
+  const userId = tgUser.id;
+  for (const ch of REQUIRED_CHANNELS) {
+    try {
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${encodeURIComponent(ch.chatId)}&user_id=${userId}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (!data.ok || !['member', 'administrator', 'creator'].includes(data.result.status)) {
+        return false;
+      }
+    } catch (e) {
+      console.warn('Channel check failed for', ch.chatId, e);
+      return false;
+    }
+  }
+  return true;
+}
+
+async function verifyMembership() {
+  const btn = document.getElementById('verifyJoinBtn');
+  if (!btn) return;
+  
+  btn.disabled = true;
+  btn.innerHTML = '<svg class="ic ic-s spin"><use href="#i-clock"/></svg> Verifying...';
+  
+  const allJoined = await checkChannelMembership();
+  
+  if (allJoined) {
+    S.u.channelsJoined = true;
+    await saveUser({ channelsJoined: true });
+    closeSheet();
+    toast('Verification successful! You can now play.', 'ok');
+    snd('level');
+  } else {
+    toast('Please join ALL channels and groups to verify.', 'err');
+    btn.disabled = false;
+    btn.innerHTML = '<svg class="ic ic-s"><use href="#i-check"/></svg> I\'ve Joined, Verify';
+  }
+}
+
+function showChannelJoinSheet() {
+  while(S.sheets.length) closeSheet();
+  
+  const channelsHtml = REQUIRED_CHANNELS.map(ch => `
+    <div class="lrow">
+      <div class="tile">${icon('link')}</div>
+      <div class="grow">
+        <div class="nb" style="font-size:12px">${ch.name}</div>
+        <div class="xs mut">Required to play</div>
+      </div>
+      <button class="sbtn gold" data-link="${ch.link}">Join</button>
+    </div>
+  `).join('');
+
+  const el = openSheet(`
+    <div class="sh-t">${icon('lock')} Mandatory Tasks</div>
+    <div class="xs mut" style="margin-bottom:16px; line-height:1.6">
+      To start playing Tiger Jump, you must join our official channels and groups. This ensures you receive updates, payouts, and community support.
+    </div>
+    <div class="card" style="padding:4px 14px; margin-bottom:16px;">
+      ${channelsHtml}
+    </div>
+    <button class="btn" id="verifyJoinBtn">
+      <svg class="ic ic-s"><use href="#i-check"/></svg> I've Joined, Verify
+    </button>
+  `);
+
+  el.querySelectorAll('[data-link]').forEach(btn => {
+    btn.onclick = () => {
+      snd('click');
+      try { tg.openLink(btn.dataset.link); } 
+      catch(e) { window.open(btn.dataset.link, '_blank'); }
+    };
+  });
+
+  el.querySelector('#verifyJoinBtn').onclick = verifyMembership;
+}
+
+let membershipCheckInterval = null;
+function startMembershipMonitor() {
+  if (membershipCheckInterval) clearInterval(membershipCheckInterval);
+  membershipCheckInterval = setInterval(async () => {
+    if (G.on && !G.paused && S.u && S.u.channelsJoined) {
+      const stillJoined = await checkChannelMembership();
+      if (!stillJoined) {
+        S.u.channelsJoined = false;
+        await saveUser({ channelsJoined: false });
+        G.paused = true;
+        showChannelJoinSheet();
+        toast('You left a required channel! Game paused.', 'err');
+        snd('fail');
+      }
+    }
+  }, 30000); // Check every 30 seconds
+}
+/* ========================================== */
+
+const S = {
+  tgId: null, u: null, view: 'game', storeTab: 'items', rankOpen: false,
+  wallet: null, run: null, sheets: [], processingPurchase: false
+};
+
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const rnd  = (a,b) => a + Math.random()*(b-a);
+const ri   = (a,b) => Math.floor(rnd(a,b+1));
+const clamp= (v,a,b) => Math.max(a,Math.min(b,v));
+const esc  = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtN = n => { n=+n||0; if(Math.abs(n)>=1000) return Math.round(n).toLocaleString('en-US');
+  if(Number.isInteger(n)) return String(n); return parseFloat(n.toFixed(n<0.001?7:2)).toString(); };
+const fmtTon = v => (+v||0).toFixed(7);
+const icon = (n,cls='ic') => `<svg class="${cls}"><use href="#i-${n}"/></svg>`;
+const tonImg = (cls='ic-img') => `<img src="${CONFIG.TON_LOGO}" class="${cls}" onerror="this.outerHTML='<svg class=&quot;${cls}&quot; style=&quot;color:var(--amber)&quot;><use href=&quot;#i-gem&quot;/></svg>'" alt="">`;
+const now = () => Date.now();
+const todayKey = () => new Date().toISOString().slice(0,10);
+const yesterKey = () => new Date(Date.now()-864e5).toISOString().slice(0,10);
+
+function toast(msg, type=''){ const t=document.createElement('div'); t.className='toast '+type;
+  t.innerHTML = `${icon(type==='err'?'x':type==='ok'?'check':'info','ic ic-s')}<span>${esc(msg)}</span>`;
+  $('#toasts').appendChild(t); setTimeout(()=>{t.style.opacity='0';t.style.transition='.3s';setTimeout(()=>t.remove(),320)},2600); }
+
+function buzz(kind='light'){ if(S.u && !S.u.settings.vibration) return;
+  try{ const h=Telegram.WebApp.HapticFeedback;
+    if(kind==='success'||kind==='error'||kind==='warning'||kind==='heavy') h.notificationOccurred(kind==='heavy'?'warning':kind);
+    else h.impactOccurred(kind); }catch(e){}
+  if(navigator.vibrate) navigator.vibrate(kind==='heavy'?45:kind==='success'?25:12); }
+
+let AC=null;
+function snd(name){ if(!S.u || !S.u.settings.sound) return;
+  try{ AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    const t=AC.currentTime, o=AC.createOscillator(), g=AC.createGain(); o.connect(g); g.connect(AC.destination);
+    const seq = { jump:[[440,660,.08]], coin:[[880,880,.05],[1320,1320,.07]], click:[[300,300,.04]],
+      boost:[[520,780,.1],[780,1040,.12]], level:[[523,523,.09],[659,659,.09],[784,784,.14]],
+      mega:[[523,523,.08],[659,659,.08],[784,784,.08],[1046,1046,.18]],
+      fail:[[330,220,.25]], tick:[[660,660,.05]] }[name]||[[440,440,.06]];
+    let d=0; seq.forEach(([f1,f2,dur])=>{ o.frequency.setValueAtTime(f1,t+d); o.frequency.exponentialRampToValueAtTime(f2,t+d+dur);
+      g.gain.setValueAtTime(.08,t+d); g.gain.exponentialRampToValueAtTime(.001,t+d+dur); d+=dur; });
+    o.start(t); o.stop(t+d+.02); }catch(e){} }
+
+const tg = window.Telegram?.WebApp;
+try{ tg?.ready(); tg?.expand();
+  if(typeof tg?.requestFullscreen==='function') tg.requestFullscreen();
+  tg?.setHeaderColor('#0d0a06'); tg?.setBackgroundColor('#0d0a06');
+  if(tg?.disableVerticalSwipes) tg.disableVerticalSwipes();
+  if(tg?.BackButton){
+    tg.BackButton.onClick(() => {
+      if (S.view === 'hist') showView('wallet');
+      else if (S.view === 'rank') showView('prof');
+      else showView('game');
+    });
+  }
+}catch(e){}
+const tgUser = tg?.initDataUnsafe?.user || null;
+
+/* ========== FIREBASE — FIXED FOR PERSISTENT WEBVIEWS ========== */
+let fdb=null; const mem={};
+try{ 
+  if(typeof firebase !== 'undefined' && CONFIG.FIREBASE.apiKey && CONFIG.FIREBASE.databaseURL){ 
+    if(!firebase.apps || !firebase.apps.length) {
+      firebase.initializeApp(CONFIG.FIREBASE); 
+    }
+    fdb = firebase.database(); 
+    fdb.enableLogging && fdb.enableLogging(false);
+  } 
+}catch(e){ 
+  console.warn('Firebase init error (falling back to memory):', e); 
+  fdb = null;
+}
+
+const seg = p => p.split('/').filter(Boolean);
+function mGet(p){ let v=mem; for(const k of seg(p)){ if(v==null) return undefined; v=v[k]; } return v; }
+function mSet(p,val){ const ks=seg(p); let v=mem; for(let i=0;i<ks.length-1;i++){ v[ks[i]]=v[ks[i]]||{}; v=v[ks[i]]; } v[ks[ks.length-1]]=val; }
+
+/* ========== FIREBASE OPERATIONS — WITH TIMEOUT & FALLBACK ========== */
+const DB_TIMEOUT = 8000;
+
+async function withTimeout(promise, label='db') {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(`${label} timeout`)), DB_TIMEOUT))
+  ]);
+}
+
+async function dbGet(p){ 
+  if(fdb){ 
+    try {
+      const s = await withTimeout(fdb.ref(p).get(), 'dbGet');
+      return s.val(); 
+    } catch(e) { 
+      console.warn('dbGet failed, using memory:', e.message);
+      return mGet(p); 
+    }
+  } 
+  return mGet(p); 
+}
+
+async function dbSet(p,val){ 
+  if(fdb){ 
+    try { await withTimeout(fdb.ref(p).set(val), 'dbSet'); return; }
+    catch(e){ console.warn('dbSet failed:', e.message); }
+  }
+  mSet(p,val); 
+}
+
+async function dbUpd(p,obj){ 
+  if(fdb){ 
+    try { await withTimeout(fdb.ref(p).update(obj), 'dbUpd'); return; }
+    catch(e){ console.warn('dbUpd failed:', e.message); }
+  }
+  const current = mGet(p) || {};
+  mSet(p, {...current, ...obj}); 
+}
+
+async function dbMulti(obj){ 
+  if(fdb){ 
+    try { await withTimeout(fdb.ref().update(obj), 'dbMulti'); return; }
+    catch(e){ console.warn('dbMulti failed:', e.message); }
+  }
+  for(const k in obj) {
+    mSet(k, obj[k]);
+  }
+}
+
+async function dbPush(p,val){ 
+  if(fdb){ 
+    try {
+      const r=fdb.ref(p).push(); 
+      await withTimeout(r.set(val), 'dbPush'); 
+      return r.key; 
+    } catch(e){ console.warn('dbPush failed:', e.message); }
+  }
+  const k='k'+now()+Math.floor(Math.random()*999); 
+  mSet(p+'/'+k,val); 
+  return k; 
+}
+
+/* ========== TON Connect ========== */
+let tc=null;
+function tcInit(){ try{ if(!window.TON_CONNECT_UI) return;
+  tc = new TON_CONNECT_UI.TonConnectUI({ manifestUrl: CONFIG.MANIFEST || 'https://example.com/tonconnect-manifest.json', buttonRootId:null });
+  tc.onStatusChange(async w=>{ 
+    S.wallet = w ? w : null; 
+    if(w && w.account) {
+      const addr = friendly(w.account.address);
+      if(S.u && S.u.walletAddress !== addr) {
+        S.u.walletAddress = addr;
+        await saveUser({walletAddress: addr});
+      }
+    } else if(S.u && S.u.walletAddress) {
+      S.u.walletAddress = '';
+      await saveUser({walletAddress: ''});
+    }
+    renderWalletUI(); 
+  });
+}catch(e){} }
+
+function friendly(raw){ try{ const [wcs,h]=raw.split(':'); const wc=parseInt(wcs,10);
+  const p=[0x51, wc & 0xff]; for(let i=0;i<64;i+=2) p.push(parseInt(h.substr(i,2),16));
+  const c=crc16x(p); p.push(c & 0xff, c >> 8);
+  let s=''; for(const b of p) s+=String.fromCharCode(b);
+  return btoa(s).replace(/\+/g,'-').replace(/\//g,'_'); }catch(e){ return raw; } }
+const shortAddr = a => a ? a.slice(0,6)+'…'+a.slice(-4) : 'Not connected';
+
+async function connectWallet(){ if(!tc){ toast('TON Connect failed to load','err'); return; } snd('click'); await tc.openModal(); }
+async function disconnectWallet(){ if(!tc) return; snd('click'); await tc.disconnect(); S.wallet=null; renderWalletUI(); toast('Wallet disconnected'); }
+
+// Enhanced payTon with better error handling
+async function payTon(amount,label){
+  if(!CONFIG.TREASURY){ toast('Store treasury is not configured yet','err'); return false; }
+  if(!S.wallet){ toast('Connect your wallet first','err'); return false; }
+  try{
+    console.log('Initiating payment:', amount, 'TON for', label);
+    await tc.sendTransaction({ 
+      validUntil: Math.floor(now()/1000)+300,
+      messages:[{ address: CONFIG.TREASURY, amount: String(Math.round(amount*1e9)) }] 
+    });
+    console.log('Payment successful for:', label);
+    return true;
+  }catch(e){ 
+    console.error('Payment failed:', e);
+    toast('Payment cancelled or failed','err'); 
+    return false; 
+  } 
+}
+
+async function payRefCommission(tonAmt, buyerId, buyerName, buyerPhoto){
+  try{
+    const a1=S.u.referredBy; if(!a1) return;
+    const u1=await dbGet('users/'+a1); if(!u1) return;
+    const c1=+(tonAmt*CONFIG.COMMISSION[0]).toFixed(7);
+    const upd={ 
+      ['users/'+a1+'/balances/ton']: +(((u1.balances?.ton)||0)+c1).toFixed(7),
+      ['users/'+a1+'/balances/tgr']: Math.floor((u1.balances?.tgr||0) + (tonAmt*1000)),
+      ['users/'+a1+'/refEarn']: +(((u1.refEarn||0)+c1)).toFixed(7) 
+    };
+    await dbPush('users/'+a1+'/history',{type:'ref',name:'Tier 1 commission',ton:c1,t:now(), fromUserId: buyerId, fromUserName: buyerName, fromUserPhoto: buyerPhoto || ''});
+    
+    const a2=u1.referredBy;
+    if(a2 && String(a2)!==String(S.tgId)){ 
+      const u2=await dbGet('users/'+a2);
+      if(u2){ 
+        const c2=+(tonAmt*CONFIG.COMMISSION[1]).toFixed(7);
+        upd['users/'+a2+'/balances/ton']=+(((u2.balances?.ton)||0)+c2).toFixed(7);
+        upd['users/'+a2+'/refEarn']=+(((u2.refEarn||0)+c2)).toFixed(7);
+        await dbPush('users/'+a2+'/history',{type:'ref',name:'Tier 2 commission',ton:c2,t:now(), fromUserId: buyerId, fromUserName: buyerName, fromUserPhoto: buyerPhoto || ''});
+        
+        const a3=u2.referredBy;
+        if(a3 && String(a3)!==String(S.tgId)){ 
+          const u3=await dbGet('users/'+a3);
+          if(u3){ 
+            const c3=+(tonAmt*CONFIG.COMMISSION[2]).toFixed(7);
+            upd['users/'+a3+'/balances/ton']=+(((u3.balances?.ton)||0)+c3).toFixed(7);
+            upd['users/'+a3+'/refEarn']=+(((u3.refEarn||0)+c3)).toFixed(7);
+            await dbPush('users/'+a3+'/history',{type:'ref',name:'Tier 3 commission',ton:c3,t:now(), fromUserId: buyerId, fromUserName: buyerName, fromUserPhoto: buyerPhoto || ''}); 
+          } 
+        } 
+      } 
+    }
+    await dbMulti(upd);
+  }catch(e){ console.warn('Ref commission error:', e); }
+}
+
+function makeUid(){ return 'TJ-'+Array.from({length:8},()=> 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*31)]).join(''); }
+function refFromStart(){ const sp = tg?.initDataUnsafe?.start_param || location.hash.replace('#',''); const m=/ref_(\d+)/.exec(sp||''); return m?m[1]:null; }
+
+function removeSplash(){
+  const splash = document.getElementById('splash');
+  if(splash){
+    splash.style.transition='opacity .4s'; 
+    splash.style.opacity='0'; 
+    setTimeout(()=>splash.remove(),450);
+  }
+}
+
+window.addEventListener('error', function(e){
+  console.error('Global error:', e.error);
+  removeSplash();
+});
+window.addEventListener('unhandledrejection', function(e){
+  console.error('Unhandled promise:', e.reason);
+  removeSplash();
+});
+
+function makeDefaultUser() {
+  return {
+    uniqueId: makeUid(), 
+    name: tgUser?.first_name || 'Guest', 
+    username: tgUser?.username || '',
+    photo: tgUser?.photo_url || '', 
+    level: 1, 
+    skin: 'amber',
+    balances:{ ton:0, tgr:0, boosts:0 },
+    energy:100, 
+    energyTs: now(),
+    stats:{ steps:0, runs:0, best:0, buys:0 },
+    tasksDone:{}, 
+    specialTasksDone: {},
+    streak:{ last:'', count:0 },
+    settings:{ sound:true, vibration:true, hd:true, floats:true },
+    inventory:{ items:{}, skins:{ amber:true } },
+    referredBy: '', 
+    refCount:0, 
+    refEarn:0, 
+    created: now(),
+    lastSeen: now(),
+    lastActiveDate: todayKey(),
+    walletAddress: '',
+    referrals: {},
+    channelsJoined: false
+  };
+}
+
+/* ========== BOOTSTRAP — FULLY PROTECTED ========== */
+async function bootstrap(){
+  try {
+    S.tgId = tgUser ? String(tgUser.id) : '777000';
+    const path='users/'+S.tgId;
+    let u = await dbGet(path);
+    const tNow = now();
+    const tDay = todayKey();
+    
+    if(!u){
+      const ref = refFromStart();
+      u = makeDefaultUser();
+      u.referredBy = ref ? String(ref) : '';
+      await dbSet(path, u);
+      
+      if(ref && String(ref)!==String(S.tgId)){
+        const ru = await dbGet('users/'+ref);
+        if(ru){ 
+          const refUpdates = { 
+            ['users/'+ref+'/balances/tgr']: Math.floor((ru.balances?.tgr||0)+CONFIG.JOIN_BONUS.tgr),
+            ['users/'+ref+'/balances/boosts']: Math.floor((ru.balances?.boosts||0)+CONFIG.JOIN_BONUS.boosts),
+            ['users/'+ref+'/refCount']: (ru.refCount||0)+1,
+            ['users/'+ref+'/referrals/'+S.tgId]: true
+          };
+          await dbMulti(refUpdates);
+          await dbPush('users/'+ref+'/history',{ type:'ref', name:'New referral joined', tgr:CONFIG.JOIN_BONUS.tgr, boosts:CONFIG.JOIN_BONUS.boosts, t:tNow }); 
+        } 
+      }
+    } else { 
+      await dbUpd(path,{ 
+        name: tgUser?.first_name || u.name || 'Guest', 
+        username: tgUser?.username || u.username || '', 
+        photo: tgUser?.photo_url || u.photo || '',
+        lastSeen: tNow,
+        lastActiveDate: tDay
+      }); 
+      u = await dbGet(path); 
+      if(!u) u = makeDefaultUser();
+    }
+    
+    S.u = u; 
+    regenEnergy(); 
+    renderAll();
+    
+  } catch(e){
+    console.error('Bootstrap error (using offline user):', e);
+    if(!S.u) S.u = makeDefaultUser();
+    try { renderAll(); } catch(e2){ console.error('Render error:', e2); }
+  } finally {
+    removeSplash();
+  }
+}
+
+function saveUser(fields){ 
+  if(!S.u || !S.tgId) return Promise.resolve();
+  Object.assign(S.u, fields); 
+  return dbUpd('users/'+S.tgId, fields); 
+}
+
+function syncBalancesRealtime() {
+  if (!S.u || !S.tgId) return;
+  S.u.balances.ton = +(S.u.balances.ton || 0).toFixed(7);
+  S.u.balances.tgr = Math.floor(S.u.balances.tgr || 0);
+  S.u.balances.boosts = Math.floor(S.u.balances.boosts || 0);
+  dbUpd('users/' + S.tgId + '/balances', S.u.balances);
+  syncBal();
+}
+
+const SKINS=[
+ { id:'amber',  name:'Classic Amber', price:0,  perk:'The original. No bonus.',              pal:{body:'#f59d1f',stripe:'#241505',belly:'#ffd88f',ear:'#c97b0d'}, eBonus:0,  tonBonus:0,    earnBonus:0  },
+ { id:'shadow', name:'Striped Shadow',price:10, perk:'+20 Max Energy · +0.20% TON earning · +5% TGR & Boost', pal:{body:'#34333f',stripe:'#0e0e16',belly:'#57566a',ear:'#232230'}, eBonus:20, tonBonus:0.20, earnBonus:5  },
+ { id:'frost',  name:'Frost Fang',    price:18, perk:'+40 Max Energy · +0.40% TON earning · +10% TGR & Boost', pal:{body:'#dfe9f2',stripe:'#44688c',belly:'#ffffff',ear:'#a9c2d8'}, eBonus:40, tonBonus:0.40, earnBonus:10 },
+ { id:'ember',  name:'Ember Mane',    price:30, perk:'+60 Max Energy · +0.60% TON earning · +15% TGR & Boost', pal:{body:'#e0531c',stripe:'#3c0f03',belly:'#ffb26b',ear:'#a63711'}, eBonus:60, tonBonus:0.60, earnBonus:15 },
+ { id:'gold',   name:'Royal Gold',    price:50, perk:'+80 Max Energy · +0.80% TON earning · +20% TGR & Boost', pal:{body:'#f2c53d',stripe:'#5c3d00',belly:'#ffefa8',ear:'#c9992a'}, eBonus:80, tonBonus:0.80, earnBonus:20 },
+];
+function curSkin(){ return SKINS.find(s=>s.id===S.u?.skin)||SKINS[0]; }
+function skinPal(){ return curSkin().pal; }
+
+const STORE_ITEMS=[
+ { id:'fang',  cat:'power',  ico:'gem',  name:'Lucky Fang',     desc:'+0.10% TON earning per level (max +2%)', eff:0.1, max:20 },
+ { id:'whisk', cat:'tgr',    ico:'tgr',  name:'Golden Whiskers',desc:'+5% TGR per jump per level',             eff:5,   max:10 },
+ { id:'charm', cat:'boost',  ico:'bolt', name:'Ember Charm',    desc:'+4% Boost chance per level',             eff:4,   max:10 },
+ { id:'spring',cat:'jump',   ico:'up',   name:'Spring Paws',    desc:'+2% jump power per level',               eff:2,   max:10 },
+ { id:'root',  cat:'energy', ico:'vibe', name:'Stamina Root',   desc:'+25 max energy per level',               eff:25,  max:8  },
+];
+const itemPrice = (it,lv) => +(0.10*Math.pow(1.5,lv)).toFixed(2);
+
+function maxEnergy(){ 
+  if(!S.u) return 100;
+  let m=100;
+  for(const it of STORE_ITEMS){ const lv=S.u.inventory?.items?.[it.id]?.lv||0; if(lv&&it.cat==='energy') m+=it.eff*lv; }
+  m += curSkin().eBonus; 
+  return m; 
+}
+function regenEnergy(){ 
+  if(!S.u) return;
+  const m=maxEnergy(), el=(now()-(S.u.energyTs||now()))/12000|0;
+  if(el>0 && S.u.energy<m){ S.u.energy=Math.min(m,S.u.energy+el); S.u.energyTs=now(); saveUser({energy:S.u.energy,energyTs:S.u.energyTs}); }
+  else if(S.u.energy>=m){ S.u.energyTs=now(); } 
+}
+setInterval(()=>{ if(S.u){ regenEnergy(); hudEnergy(); } },5000);
+
+function catBonus(cat){ 
+  if(!S.u) return 0;
+  let s=0; 
+  for(const it of STORE_ITEMS){ const lv=S.u.inventory?.items?.[it.id]?.lv||0; if(lv&&it.cat===cat) s+=it.eff*lv; } 
+  return s; 
+}
+function syncBal(){ 
+  if(!S.u) return;
+  $('#hTon').textContent=fmtN(S.u.balances?.ton||0); 
+  $('#hTgr').textContent=fmtN(S.u.balances?.tgr||0); 
+  $('#hBoost').textContent=fmtN(S.u.balances?.boosts||0); 
+}
+
+/* ========== GAME ========== */
+const cv=$('#cv'), cx=cv.getContext('2d');
+const G={ on:false, paused:false, raf:0, last:0, W:0, H:0, dpr:1,
+  py:0, cam:0, x:0, vx:0, vy:0, tx:null, keyDir:0,
+  plats:[], genY:0, step:0, run:null, time:0, fireflies:[], floats:[],
+  paws:[], bursts:[], jumps:0, pawSide:false, lastBlk:0 };
+
+function sizeCv(){ const r=$('#gameWrap').getBoundingClientRect();
+  G.dpr = (S.u?.settings?.hd? Math.min(devicePixelRatio||1,2.5) : 1);
+  cv.width=r.width*G.dpr; cv.height=r.height*G.dpr; G.W=r.width; G.H=r.height;
+  cx.setTransform(G.dpr,0,0,G.dpr,0,0); }
+addEventListener('resize',()=>{ if(G.on) sizeCv(); });
+
+function mkPlat(y){ const i=G.plats.length;
+  const w = clamp(120 - i*0.9, 52, 120) * rnd(.85,1.15);
+  const moving = i>8 && Math.random() < clamp(0.06+i*0.0015,0,0.32);
+  return { i, y, w, cx: rnd(w/2+14, G.W-w/2-14), base:0, moving,
+    rng: rnd(20,60), spd: rnd(.7,1.5), ph: rnd(0,6.28) , y0:y, jumped: false };
+}
+function resetRun(){
+  G.plats=[]; G.step=0; G.genY=0; G.cam=0; G.x=G.W/2; G.vx=0; G.vy=0; G.py=0; G.tx=null;
+  G.floats=[]; G.paws=[]; G.bursts=[]; G.jumps=0; G.pawSide=false; G.lastBlk=0;
+  const p0=mkPlat(0); p0.w=160; p0.cx=G.W/2; p0.moving=false; G.plats.push(p0); G.genY=0;
+  while(G.genY < G.H*1.6) addPlat();
+  G.run={ ton:0,tgr:0,boost:0,steps:0,h:0 };
+  G.fireflies = Array.from({length:26},()=>({x:rnd(0,G.W),y:rnd(0,G.H),r:rnd(1,2.4),s:rnd(6,20)}));
+  $('#gameMsg').textContent='';
+}
+function addPlat(){ G.genY += clamp(62 + G.plats.length*0.45, 62, 138) * rnd(.9,1.12); G.plats.push(mkPlat(G.genY)); }
+
+function startGame(){
+  if(!S.u){ toast('Loading user data...','err'); return; }
+  
+  // MANDATORY CHANNEL CHECK
+  if (!S.u.channelsJoined) {
+    showChannelJoinSheet();
+    return;
+  }
+  
+  regenEnergy();
+  if(S.u.energy<=0){ 
+    $('#gameMsg').textContent='OUT OF ENERGY · TAP TO WATCH ADS';
+    offerAd(); 
+    return; 
+  }
+  sizeCv(); resetRun(); G.on=true; G.paused=false; S.view='game';
+  $('#gameMsg').textContent=''; G.last=0; cancelAnimationFrame(G.raf); G.raf=requestAnimationFrame(loop);
+  snd('level');
+}
+function stopGame(){ G.on=false; cancelAnimationFrame(G.raf); }
+
+function drawRw(c,type,x,y,r){
+  if(type==='tgr'){ 
+    c.fillStyle='#57d9a3'; c.beginPath(); c.arc(x,y,r,0,7); c.fill();
+    c.fillStyle='rgba(6,26,18,.82)';
+    c.beginPath(); c.arc(x-r*0.45,y-r*0.42,r*0.18,0,7); c.fill();
+    c.beginPath(); c.arc(x,y-r*0.6,r*0.18,0,7); c.fill();
+    c.beginPath(); c.arc(x+r*0.45,y-r*0.42,r*0.18,0,7); c.fill();
+    c.beginPath(); c.ellipse(x,y+r*0.28,r*0.44,r*0.36,0,0,7); c.fill();
+  } else if(type==='bolt'){ 
+    c.fillStyle='#ff7847'; c.beginPath();
+    c.moveTo(x+r*0.32,y-r); c.lineTo(x-r*0.55,y+r*0.2); c.lineTo(x-r*0.05,y+r*0.2);
+    c.lineTo(x-r*0.32,y+r); c.lineTo(x+r*0.55,y-r*0.2); c.lineTo(x+r*0.05,y-r*0.2);
+    c.closePath(); c.fill();
+  } else { 
+    c.fillStyle='#4fb3f6'; c.beginPath();
+    c.moveTo(x,y+r); c.lineTo(x-r,y-r*0.35); c.lineTo(x-r*0.5,y-r); c.lineTo(x+r*0.5,y-r); c.lineTo(x+r,y-r*0.35);
+    c.closePath(); c.fill();
+    c.fillStyle='rgba(255,255,255,.4)'; c.beginPath();
+    c.moveTo(x,y+r); c.lineTo(x-r,y-r*0.35); c.lineTo(x,y-r*0.1); c.closePath(); c.fill();
+  }
+}
+function drawPaw(c,x,y,r,a){
+  c.save(); c.globalAlpha=a*0.5; c.fillStyle='#ffb020';
+  c.beginPath(); c.ellipse(x,y+r*0.4,r*0.8,r*0.6,0,0,7); c.fill();
+  c.beginPath();
+  c.arc(x-r*0.75,y-r*0.3,r*0.3,0,7); c.arc(x,y-r*0.55,r*0.3,0,7); c.arc(x+r*0.75,y-r*0.3,r*0.3,0,7);
+  c.fill(); c.restore();
+}
+function addFloat(x,y,txt,icn,col,big){ if(!S.u?.settings?.floats) return;
+  G.floats.push({x,y,txt,icon:icn,c:col,life:big?2.2:1.2,big:!!big}); }
+
+function onJump(){
+  if(!S.u) return;
+  const skin=curSkin();
+  G.jumps++;
+  const earnM=(1+catBonus('tgr')/100)*(1+skin.earnBonus/100);
+  const tgr=Math.max(1,Math.round(rnd(1,4)*earnM));
+  S.u.balances.tgr+=tgr; G.run.tgr+=tgr;
+  const sy=H2S(G.py)-46;
+  addFloat(G.x,sy-14,`+${tgr}`,'tgr','#57d9a3');
+  const bc=10+catBonus('boost');
+  if(Math.random()*100<bc){ const b=ri(1,2); S.u.balances.boosts+=b; G.run.boost+=b;
+    addFloat(G.x+22,sy-14,`+${b}`,'bolt','#ff7847'); snd('boost'); }
+  else snd('coin');
+  G.pawSide=!G.pawSide;
+  G.paws.push({x:G.x+(G.pawSide?7:-7),y:G.py,t:0});
+  if(G.paws.length>50) G.paws.shift();
+  
+  if(G.jumps%30===0){
+    const mult=ri(1,5);
+    const tonM=(1+(catBonus('power')+skin.tonBonus)/100);
+    const ton=+(rnd(0.00001,0.00006)*mult*tonM).toFixed(7);
+    const mtgr=Math.round(ri(60,120)*mult*earnM);
+    const mbst=Math.round(ri(10,25)*mult*(1+catBonus('boost')/100)*(1+skin.earnBonus/100));
+    S.u.balances.ton=+(S.u.balances.ton+ton).toFixed(7);
+    S.u.balances.tgr+=mtgr; S.u.balances.boosts+=mbst;
+    G.run.ton=+(G.run.ton+ton).toFixed(7); G.run.tgr+=mtgr; G.run.boost+=mbst;
+    addFloat(G.x,sy-46,`MEGA +${ton.toFixed(7)} TON`,'ton','#ffb020',true);
+    addFloat(G.x,sy-74,`+${mtgr} TGR`,'tgr','#57d9a3',true);
+    addFloat(G.x,sy-102,`+${mbst} BOOST`,'bolt','#ff7847',true);
+    G.bursts.push({x:G.x,y:H2S(G.py)-20,t:0});
+    snd('mega'); buzz('heavy');
+    
+    syncBalancesRealtime();
+  } else {
+    syncBal();
+  }
+}
+
+function awardStep(n){
+  if(!S.u) return;
+  const skin=curSkin();
+  const oldS=G.step, newS=oldS+n;
+  G.step=newS; $('#hudStep').textContent=newS; G.run.steps+=n;
+  const b0=Math.floor(oldS/20), b1=Math.floor(newS/20);
+  if(b1>b0){
+    const earnM=(1+catBonus('tgr')/100)*(1+skin.earnBonus/100);
+    const bstM=(1+catBonus('boost')/100)*(1+skin.earnBonus/100);
+    let tgr=0,boost=0;
+    for(let b=b0+1;b<=b1;b++){ tgr+=Math.round(ri(20,45)*earnM); boost+=Math.round(ri(4,9)*bstM); }
+    S.u.balances.tgr+=tgr; S.u.balances.boosts+=boost;
+    G.run.tgr+=tgr; G.run.boost+=boost;
+    const sy=H2S(G.py)-70;
+    addFloat(G.x,sy,`BLOCK x20  +${tgr}`,'tgr','#57d9a3');
+    addFloat(G.x,sy-24,`+${boost} BOOST`,'bolt','#ff7847');
+    snd('boost'); buzz('success');
+    
+    syncBalancesRealtime();
+  }
+}
+
+function update(dt){
+  G.time+=dt;
+  const BP = 950 * (1+catBonus('jump')/100), GRAV = 2200, maxSpeed = 1200;
+
+  const target = G.tx!=null ? G.tx : null;
+  if(target!=null){
+    const diff = target - G.x;
+    if(Math.abs(diff) < 4){ G.x = target; G.vx = 0; }
+    else { G.vx += clamp(diff * 50, -maxSpeed, maxSpeed)*dt; }
+  }
+  G.vx += G.keyDir * 1000 * dt;
+  G.vx *= Math.pow(0.02, dt);
+  G.x += G.vx*dt;
+  if(G.x<16){G.x=16;G.vx=Math.abs(G.vx)*.5;}
+  if(G.x>G.W-16){G.x=G.W-16;G.vx=-Math.abs(G.vx)*.5;}
+
+  const prevBottom = G.py;
+  G.vy -= GRAV*dt;
+  G.py += G.vy*dt;
+
+  if(G.vy<0){
+    let bestPlat = null;
+    for(const p of G.plats){
+      const pcx = p.moving ? p.cx + Math.sin(G.time*p.spd+p.ph)*p.rng : p.cx;
+      if(Math.abs(G.x-pcx) < p.w/2+18 && prevBottom >= p.y && G.py <= p.y){
+        if(!bestPlat || p.y > bestPlat.y) bestPlat = p;
+      }
+    }
+    if(bestPlat){
+      if(!bestPlat.jumped){
+        bestPlat.jumped = true;
+        G.py = bestPlat.y;
+        G.vy = BP;
+        onJump();            
+        snd('jump');
+        buzz('light');
+        spendEnergy();
+      } else {
+        G.py = bestPlat.y;
+        G.vy = BP;
+        snd('jump');
+      }
+    }
+  }
+
+  if(G.py - G.cam > G.H*0.55) G.cam = G.py - G.H*0.55;
+  while(G.genY < G.py + G.H*1.4) addPlat();
+  G.plats = G.plats.filter(p=>p.y > G.cam-160);
+  let passed=0; for(const p of G.plats) if(p.y < G.py) passed++;
+  if(passed > G.step){ awardStep(passed-G.step); }
+  $('#hudH').textContent = Math.max(0, Math.round(G.py/10));
+  if(H2S(G.py) > G.H + 70) endRun();
+}
+function H2S(wy){ return G.H - (wy - G.cam); }
+
+function spendEnergy(){
+  if(G.paused || !S.u) return;
+  S.u.energy--;
+  S.u.energyTs=now();
+  hudEnergy();
+  if(S.u.energy<=0){
+    G.paused=true;
+    setTimeout(()=>offerAd(), 400);
+  }
+}
+function hudEnergy(){
+  if(!S.u) return;
+  const m=maxEnergy(), e=clamp(S.u.energy,0,m);
+  const pct = m > 0 ? (e/m*100) : 0;
+  $('#enBar').style.width=pct+'%';
+  $('#enTxt').textContent=`${Math.floor(e)} / ${m}`;
+}
+
+function render(dt=0.016){
+  cx.clearRect(0,0,G.W,G.H);
+  cx.fillStyle='#0d0a06'; cx.fillRect(0,0,G.W,G.H);
+  cx.fillStyle='rgba(255,176,32,.14)';
+  for(const f of G.fireflies){ const yy=((f.y - G.cam*0.35)%(G.H+40)+G.H+40)%(G.H+40)-20;
+    cx.beginPath(); cx.arc((f.x+Math.sin(G.time+f.y)*14+G.W)%G.W,yy,f.r,0,7); cx.fill(); }
+  cx.font='10px Russo One'; cx.textAlign='center';
+  for(let m=500;m<G.cam+G.H+500;m+=500){ const sy=H2S(m); if(sy>-20&&sy<G.H+20){
+    cx.fillStyle='rgba(160,138,104,.22)'; cx.fillText('— '+m/10+' m —',G.W/2,sy); } }
+  G.paws=G.paws.filter(p=>(p.t+=dt)<2.6);
+  for(const p of G.paws){ const sy=H2S(p.y)+8; if(sy<-20||sy>G.H+20) continue;
+    drawPaw(cx,p.x+Math.sin(p.t*6)*1.2,sy,5.5,1-p.t/2.6); }
+  for(const p of G.plats){
+    const sy=H2S(p.y); if(sy<-30||sy>G.H+30) continue;
+    const pcx = p.moving ? p.cx + Math.sin(G.time*p.spd+p.ph)*p.rng : p.cx;
+    cx.fillStyle='#241a10'; roundRect(pcx-p.w/2,sy,p.w,12,6); cx.fill();
+    cx.strokeStyle='#3d2d18'; cx.lineWidth=1; roundRect(pcx-p.w/2,sy,p.w,12,6); cx.stroke();
+    cx.fillStyle= p.moving ? '#ff7847' : '#ffb020';
+    roundRect(pcx-p.w/2+4,sy+2,p.w-8,2.5,2); cx.fill();
+  }
+  drawTiger(cx, G.x, H2S(G.py)-20, 20, skinPal(), G.time, G.vy, G.vx);
+  G.bursts=G.bursts.filter(b=>(b.t+=dt)<1);
+  for(const b of G.bursts){ const p=b.t; cx.globalAlpha=1-p;
+    const cols=['#ffb020','#57d9a3','#ff7847'];
+    for(let i=0;i<3;i++){ cx.strokeStyle=cols[i]; cx.lineWidth=3-i*0.6;
+      cx.beginPath(); cx.arc(b.x,b.y,10+p*110+i*16,0,7); cx.stroke(); }
+    cx.lineWidth=2;
+    for(let i=0;i<12;i++){ const a=i/12*6.283+p*1.5, r1=20+p*60, r2=r1+14+p*30;
+      cx.strokeStyle=cols[i%3]; cx.beginPath();
+      cx.moveTo(b.x+Math.cos(a)*r1,b.y+Math.sin(a)*r1);
+      cx.lineTo(b.x+Math.cos(a)*r2,b.y+Math.sin(a)*r2); cx.stroke(); }
+    cx.globalAlpha=1; }
+  G.floats=G.floats.filter(f=>(f.life-=dt*(f.big?0.5:0.9))>0);
+  for(const f of G.floats){
+    f.y-=dt*(f.big?36:52);
+    cx.globalAlpha=clamp(f.life,0,1);
+    cx.font=`bold ${f.big?15:11}px Russo One`; cx.textAlign='center';
+    if(f.icon) drawRw(cx,f.icon,f.x,f.y-12,f.big?8:5.5);
+    cx.fillStyle=f.c; cx.fillText(f.txt,f.x,f.y);
+    cx.globalAlpha=1;
+  }
+}
+function roundRect(x,y,w,h,r){ cx.beginPath(); cx.moveTo(x+r,y); cx.arcTo(x+w,y,x+w,y+h,r); cx.arcTo(x+w,y+h,x,y+h,r); cx.arcTo(x,y+h,x,y,r); cx.arcTo(x,y,x+w,y,r); cx.closePath(); }
+
+function drawTiger(c,x,y,r,pal,t,vy,vx=0){
+  const st=clamp(-vy/900,-0.25,0.3); 
+  c.save(); c.translate(x,y); c.rotate(clamp((vx||0)*0.0004,-0.3,0.3)); c.scale(1-st,st+1);
+  c.fillStyle=pal.body;
+  c.beginPath(); c.moveTo(-r*0.85,-r*0.5); c.lineTo(-r*0.55,-r*1.25); c.lineTo(-r*0.15,-r*0.75); c.closePath(); c.fill();
+  c.beginPath(); c.moveTo(r*0.85,-r*0.5); c.lineTo(r*0.55,-r*1.25); c.lineTo(r*0.15,-r*0.75); c.closePath(); c.fill();
+  c.fillStyle=pal.ear;
+  c.beginPath(); c.moveTo(-r*0.68,-r*0.58); c.lineTo(-r*0.52,-r*1.02); c.lineTo(-r*0.3,-r*0.72); c.closePath(); c.fill();
+  c.beginPath(); c.moveTo(r*0.68,-r*0.58); c.lineTo(r*0.52,-r*1.02); c.lineTo(r*0.3,-r*0.72); c.closePath(); c.fill();
+  c.fillStyle=pal.body; c.beginPath(); c.arc(0,0,r,0,7); c.fill();
+  c.strokeStyle=pal.stripe; c.lineWidth=r*0.16; c.lineCap='round';
+  c.beginPath();
+  c.moveTo(-r*0.95,-r*0.15); c.lineTo(-r*0.55,-r*0.05);
+  c.moveTo(-r*0.9,r*0.25); c.lineTo(-r*0.5,r*0.3);
+  c.moveTo(r*0.95,-r*0.15); c.lineTo(r*0.55,-r*0.05);
+  c.moveTo(r*0.9,r*0.25); c.lineTo(r*0.5,r*0.3);
+  c.moveTo(0,-r*0.98); c.lineTo(0,-r*0.5);
+  c.stroke();
+  c.fillStyle=pal.belly; c.beginPath(); c.ellipse(0,r*0.42,r*0.55,r*0.4,0,0,7); c.fill();
+  c.fillStyle='#171009';
+  c.beginPath(); c.ellipse(-r*0.38,-r*0.1,r*0.14,r*0.2,0,0,7); c.fill();
+  c.beginPath(); c.ellipse(r*0.38,-r*0.1,r*0.14,r*0.2,0,0,7); c.fill();
+  c.fillStyle='#fff';
+  c.beginPath(); c.arc(-r*0.33,-r*0.17,r*0.05,0,7); c.fill();
+  c.beginPath(); c.arc(r*0.43,-r*0.17,r*0.05,0,7); c.fill();
+  c.fillStyle='#171009';
+  c.beginPath(); c.moveTo(-r*0.12,r*0.28); c.lineTo(r*0.12,r*0.28); c.lineTo(0,r*0.42); c.closePath(); c.fill();
+  c.strokeStyle='#171009'; c.lineWidth=r*0.07;
+  c.beginPath();
+  c.moveTo(0,r*0.42); c.lineTo(0,r*0.55);
+  c.moveTo(0,r*0.55); c.quadraticCurveTo(-r*0.18,r*0.66,-r*0.3,r*0.55);
+  c.moveTo(0,r*0.55); c.quadraticCurveTo(r*0.18,r*0.66,r*0.3,r*0.55);
+  c.stroke();
+  c.restore();
+}
+
+function loop(ts){
+  if(!G.on) return;
+  const dt=Math.min(0.033, G.last? (ts-G.last)/1000 : 0.016); G.last=ts;
+  if(!G.paused) update(dt);
+  render(dt);
+  G.raf=requestAnimationFrame(loop);
+}
+
+function endRun(){
+  if(!G.on || !S.u) return;
+  G.on=false; cancelAnimationFrame(G.raf);
+  const h=Math.max(0,Math.round(G.py/10)); G.run.h=h;
+  const st=S.u.stats||{runs:0,best:0,steps:0}; 
+  st.runs++; st.best=Math.max(st.best,h); st.steps+=G.run.steps;
+  saveUser({stats:st, balances:S.u.balances, energy:S.u.energy, energyTs:S.u.energyTs});
+  snd('fail'); buzz('error');
+  $('#gameMsg').textContent='TAP TO START · HOLD & DRAG TO STEER';
+  renderTasks();
+  const r=G.run;
+  const el=openSheet(`
+    <div class="sh-t">${icon('flame')}RUN COMPLETE</div>
+    <div class="xs mut" style="margin-bottom:12px">All rewards from this run are already in your balance.</div>
+    <div class="row" style="gap:8px;margin-bottom:6px">
+      <div class="card grow" style="margin:0;text-align:center"><div class="big" style="font-size:17px;color:#ffb020">${r.ton.toFixed(7)}</div><div class="xs mut">TON</div></div>
+      <div class="card grow" style="margin:0;text-align:center"><div class="big" style="font-size:17px;color:#57d9a3">${fmtN(r.tgr)}</div><div class="xs mut">TGR</div></div>
+      <div class="card grow" style="margin:0;text-align:center"><div class="big" style="font-size:17px;color:#ff7847">${fmtN(r.boost)}</div><div class="xs mut">BOOST</div></div>
+    </div>
+    <div class="row sm mut" style="justify-content:space-between;margin:8px 2px 14px"><span>Height reached</span><b style="color:var(--text)">${h} m</b></div>
+    <button class="btn" id="againBtn">${icon('play','ic ic-s')}Play Again</button>`);
+  el.querySelector('#againBtn').onclick=()=>{ closeSheet(); if(S.u.energy>0) startGame(); else offerAd(); };
+}
+
+function playMonetag(){
+  return new Promise(res=>{
+    let done=false; const fin=()=>{ if(!done){ done=true; res(); } };
+    try{
+      const f=window['show_'+CONFIG.MONETAG_ZONE];
+      if(typeof f==='function'){ f().then(fin).catch(fin); setTimeout(fin,60000); }
+      else fin();
+    }catch(e){ fin(); }
+  });
+}
+
+function offerAd(){
+  if(G.on) G.paused=true;
+  while(S.sheets.length) closeSheet();
+  const el = openSheet(`
+    <div class="sh-t">${icon('bolt')}OUT OF ENERGY</div>
+    <div style="text-align:center;margin:6px 0 4px">
+      <div class="big" style="font-size:22px;color:var(--amber)">Energy ended</div>
+      <div class="xs mut" style="margin-top:8px;line-height:1.6">Watch a short ad to refill your energy<br>and resume this run exactly where it stopped.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:18px">
+      <button class="btn" id="watchAdBtn">${icon('play','ic ic-s')}Watch Ads to Resume</button>
+      <button class="btn danger" id="endRunBtn">${icon('x','ic ic-s')}End Run</button>
+    </div>`);
+  el.querySelector('#watchAdBtn').onclick = async () => {
+    const b = el.querySelector('#watchAdBtn');
+    b.disabled = true;
+    b.innerHTML = icon('clock','ic ic-s') + ' Loading ad…';
+    await playMonetag();
+    closeSheet();
+    claimContinue();
+  };
+  el.querySelector('#endRunBtn').onclick = () => {
+    closeSheet();
+    if(G.on) endRun();
+  };
+}
+
+function claimContinue(){
+  S.u.energy=maxEnergy(); S.u.energyTs=now();
+  saveUser({energy:S.u.energy, energyTs:S.u.energyTs}); hudEnergy();
+  if(G.on){ G.paused=false; G.last=0; toast('Energy refilled — run resumed!','ok'); }
+  else { startGame(); }
+}
+
+let pressing=false;
+cv.addEventListener('pointerdown',e=>{ e.preventDefault(); if(!S.u) return;
+  if(!G.on && S.u.energy <= 0){ 
+    offerAd();
+    return;
+  }
+  if(!G.on){ startGame(); if(!G.on) return; }
+  pressing=true; const r=cv.getBoundingClientRect(); G.tx=e.clientX-r.left; });
+cv.addEventListener('pointermove',e=>{ if(!pressing) return;
+  const r=cv.getBoundingClientRect(); G.tx=e.clientX-r.left; });
+addEventListener('pointerup',()=>{ pressing=false; G.tx=null; });
+addEventListener('pointercancel',()=>{ pressing=false; G.tx=null; });
+addEventListener('keydown',e=>{ if(e.key==='ArrowLeft')G.keyDir=-1; if(e.key==='ArrowRight')G.keyDir=1; });
+addEventListener('keyup',e=>{ if(e.key==='ArrowLeft'&&G.keyDir<0)G.keyDir=0; if(e.key==='ArrowRight'&&G.keyDir>0)G.keyDir=0; });
+
+/* ========== FIXED PURCHASE FUNCTIONS ========== */
+function renderStore(){
+  const tabs=[['items','Gear'],['skins','Skins']];
+  $('#storeTabs').innerHTML=tabs.map(([id,n])=>
+    `<button class="pill ${S.storeTab===id?'a':''}" data-tab="${id}" style="padding:9px 16px;font-size:11px">${n}</button>`).join('');
+  $$('#storeTabs [data-tab]').forEach(b=>b.onclick=()=>{ S.storeTab=b.dataset.tab; snd('click'); renderStore(); });
+  if(S.storeTab==='items') renderGear(); else renderSkins();
+}
+
+function renderGear(){
+  if(!S.u) return;
+  $('#storeBody').innerHTML=STORE_ITEMS.map(it=>{
+    const lv=S.u.inventory?.items?.[it.id]?.lv||0;
+    const cost=itemPrice(it,lv);
+    const maxed=lv>=it.max;
+    const pips=it.max<=10?`<div class="pips">${Array.from({length:it.max},(_,i)=>`<i class="pip ${i<lv?'f':''}"></i>`).join('')}</div>`
+      :`<div class="xs mut" style="margin-top:4px">LV ${lv} / ${it.max}</div>`;
+    return `<div class="card"><div class="lrow" style="border:0">
+      <div class="tile">${icon(it.ico)}</div>
+      <div class="grow"><div class="nb">${it.name}</div><div class="xs mut">${it.desc}</div>${pips}</div>
+      ${maxed?`<span class="pill a">MAX</span>`
+        :`<button class="sbtn gold" data-buy="${it.id}">${tonImg('ic-img')} ${cost.toFixed(2)}</button>`}
+    </div></div>`;
+  }).join('');
+  
+  $$('#storeBody [data-buy]').forEach(b=>b.onclick=async ()=>{
+    if(S.processingPurchase) return;
+    const it=STORE_ITEMS.find(x=>x.id===b.dataset.buy);
+    if(!it) return;
+    const lv=S.u.inventory?.items?.[it.id]?.lv||0;
+    if(lv>=it.max) return;
+    const cost=itemPrice(it,lv);
+    const newLv = lv + 1;
+    S.processingPurchase = true;
+    b.disabled = true;
+    const originalHTML = b.innerHTML;
+    b.innerHTML = `<svg class="ic ic-s spin"><use href="#i-clock"/></svg> Processing...`;
+    try {
+      const paymentSuccess = await payTon(cost, it.name);
+      if(paymentSuccess) {
+        if(!S.u.inventory) S.u.inventory = { items: {}, skins: { amber: true } };
+        if(!S.u.inventory.items) S.u.inventory.items = {};
+        S.u.inventory.items[it.id] = { lv: newLv };
+        S.u.stats.buys = (S.u.stats.buys || 0) + 1;
+        snd('level'); 
+        toast(`${it.name} upgraded to LV ${newLv}!`, 'ok');
+        buzz('success');
+        await saveUser({ inventory: S.u.inventory, stats: S.u.stats });
+        await payRefCommission(cost, S.tgId, S.u.name || 'Guest', S.u.photo || '');
+        hudEnergy();
+        renderStore();
+      } else {
+        toast('Purchase cancelled', 'err');
+        b.disabled = false;
+        b.innerHTML = originalHTML;
+      }
+    } catch(e) {
+      console.error('Purchase error:', e);
+      toast('Purchase failed: ' + e.message, 'err');
+      b.disabled = false;
+      b.innerHTML = originalHTML;
+    } finally {
+      S.processingPurchase = false;
+    }
+  });
+}
+
+function renderSkins(){
+  if(!S.u) return;
+  $('#storeBody').innerHTML=SKINS.map(s=>{
+    const owned=!!S.u.inventory?.skins?.[s.id], eq=S.u.skin===s.id;
+    return `<div class="card"><div class="lrow" style="border:0">
+      <canvas class="skprev" data-sk="${s.id}" width="84" height="84" style="width:42px;height:42px;flex:none"></canvas>
+      <div class="grow"><div class="nb">${s.name}</div><div class="xs mut" style="margin-top:2px">${s.perk}</div></div>
+      ${eq?`<span class="pill g">EQUIPPED</span>`
+        :owned?`<button class="sbtn" data-eq="${s.id}">Equip</button>`
+        :`<button class="sbtn gold" data-skbuy="${s.id}">${tonImg('ic-img')} ${s.price}</button>`}
+    </div></div>`;
+  }).join('');
+  
+  $$('#storeBody .skprev').forEach(c=>{
+    const s=SKINS.find(x=>x.id===c.dataset.sk);
+    drawTiger(c.getContext('2d'),42,44,26,s.pal,0,0,0);
+  });
+  
+  $$('#storeBody [data-eq]').forEach(b=>b.onclick=async ()=>{
+    S.u.skin=b.dataset.eq; await saveUser({skin:S.u.skin});
+    snd('click'); toast('Skin equipped','ok'); hudEnergy(); renderStore();
+  });
+  
+  $$('#storeBody [data-skbuy]').forEach(b=>b.onclick=async ()=>{
+    if(S.processingPurchase) return;
+    const s=SKINS.find(x=>x.id===b.dataset.skbuy);
+    if(!s) return;
+    S.processingPurchase = true;
+    b.disabled = true;
+    const originalHTML = b.innerHTML;
+    b.innerHTML = `<svg class="ic ic-s spin"><use href="#i-clock"/></svg> Processing...`;
+    try {
+      const paymentSuccess = await payTon(s.price, s.name + ' skin');
+      if(paymentSuccess) {
+        if(!S.u.inventory) S.u.inventory = { items: {}, skins: {} };
+        if(!S.u.inventory.skins) S.u.inventory.skins = {};
+        S.u.inventory.skins[s.id] = true;
+        S.u.skin = s.id;
+        S.u.stats.buys = (S.u.stats.buys || 0) + 1;
+        snd('level'); 
+        toast(`${s.name} unlocked & equipped!`, 'ok');
+        buzz('success');
+        await saveUser({ inventory: S.u.inventory, skin: S.u.skin, stats: S.u.stats });
+        await payRefCommission(s.price, S.tgId, S.u.name || 'Guest', S.u.photo || '');
+        hudEnergy();
+        renderStore();
+      } else {
+        toast('Purchase cancelled', 'err');
+        b.disabled = false;
+        b.innerHTML = originalHTML;
+      }
+    } catch(e) {
+      console.error('Skin purchase error:', e);
+      toast('Purchase failed: ' + e.message, 'err');
+      b.disabled = false;
+      b.innerHTML = originalHTML;
+    } finally {
+      S.processingPurchase = false;
+    }
+  });
+}
+
+const STREAK_REW=[{tgr:500},{tgr:1000},{tgr:1500},{tgr:2000,boosts:100},{tgr:2500,boosts:150},{tgr:3500,boosts:250},{tgr:5000,boosts:500}];
+const MISSIONS=[
+ {id:'m1',name:'Rookie Climber',desc:'Pass 25 platforms',target:25,stat:'steps',rew:{tgr:1000}},
+ {id:'m2',name:'Sky Walker',desc:'Pass 250 platforms',target:250,stat:'steps',rew:{tgr:5000,boosts:250}},
+ {id:'m3',name:'First Flight',desc:'Finish 1 run',target:1,stat:'runs',rew:{tgr:800}},
+ {id:'m4',name:'High Flyer',desc:'Reach 100 m in one run',target:100,stat:'best',rew:{tgr:2500,boosts:150}},
+ {id:'m5',name:'Marathon',desc:'Finish 10 runs',target:10,stat:'runs',rew:{tgr:6000,boosts:400}},
+ {id:'m6',name:'Legend',desc:'Reach 500 m in one run',target:500,stat:'best',rew:{tgr:15000,boosts:1000}},
+];
+
+function openInfoSheet(type) {
+  let title = '', desc = '', iconId = 'info';
+  if(type === 'ton') {
+    title = 'TON Balance';
+    desc = 'TON can be withdrawn to your connected TON wallet at any time. The minimum withdrawal amount is 0.01 TON. Ensure your wallet is connected and you have enough balance to cover network fees.';
+    iconId = 'gem';
+  } else if(type === 'tgr') {
+    title = 'TGR Token';
+    desc = 'TGR is the native utility token of Tiger Jump. It will be listed on major decentralized exchanges soon and airdropped to active users based on their in-game performance, streaks, and referrals.';
+    iconId = 'tgr';
+  } else if(type === 'boosts') {
+    title = 'Boosts';
+    desc = 'Boosts are the primary currency used to level up your Tiger profile. Each level requires progressively more Boosts but grants you permanent bonuses, higher energy caps, and better status in the global rankings.';
+    iconId = 'bolt';
+  } else if(type === 'withdraw') {
+    title = 'Withdrawal Rules';
+    desc = 'Minimum withdrawal amount is <b>0.01 TON</b>. You can only make <b>1 withdrawal request per day</b>. After your 1st free withdrawal, a Store purchase is required to withdraw again. Ensure your wallet address is correct (starts with UQ or EQ) before confirming. Withdrawals are processed and credited to your connected TON wallet.';
+    iconId = 'info';
+  }
+  openSheet(`
+    <div class="sh-t">${icon(iconId)} ${title}</div>
+    <div class="xs mut" style="line-height:1.7; margin-top:12px;">${desc}</div>
+    <button class="btn" style="margin-top:20px;" onclick="closeSheet()">Got it</button>
+  `);
+}
+
+function renderTasks(){
+  if(!S.u) return;
+  
+  const vTasks = $('#v-tasks');
+  let adTaskEl = $('#adTaskCard');
+  if(!adTaskEl) {
+    adTaskEl = document.createElement('div');
+    adTaskEl.id = 'adTaskCard';
+    vTasks.insertBefore(adTaskEl, vTasks.firstChild);
+  }
+  adTaskEl.innerHTML = `
+    <div class="card" style="padding: 24px 16px; border: 1px solid var(--amber2); background: linear-gradient(145deg, var(--panel) 0%, var(--panel2) 100%); margin-bottom: 16px; animation: vin .4s ease;">
+      <div class="row" style="gap: 16px; margin-bottom: 16px;">
+        <div class="tile" style="width: 64px; height: 64px; background: var(--amber); color: #170e01; border-radius: 16px;">
+          <svg class="ic" style="width: 32px; height: 32px;"><use href="#i-play"/></svg>
+        </div>
+        <div class="grow">
+          <div class="nb" style="font-size: 18px; color: var(--amber); margin-bottom: 4px;">Watch Ads & Earn</div>
+          <div class="xs mut" style="line-height: 1.5;">Watch a short rewarded video and get instant crypto rewards directly to your balance!</div>
+        </div>
+      </div>
+      <div class="row" style="gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+        <div class="pill a" style="padding: 8px 12px; font-size: 12px; display: flex; align-items: center; gap: 6px;">${tonImg('ic-s')} +0.000005 TON</div>
+        <div class="pill g" style="padding: 8px 12px; font-size: 12px; display: flex; align-items: center; gap: 6px;"><svg class="ic ic-s" style="color:var(--mint)"><use href="#i-tgr"/></svg> +200 TGR</div>
+        <div class="pill c" style="padding: 8px 12px; font-size: 12px; display: flex; align-items: center; gap: 6px;"><svg class="ic ic-s" style="color:var(--coral)"><use href="#i-bolt"/></svg> +20 BOOST</div>
+      </div>
+      <button class="btn" id="watchAdTaskBtn" style="padding: 16px; font-size: 15px;">
+        <svg class="ic ic-s"><use href="#i-play"/></svg> Watch Ad Now
+      </button>
+    </div>
+  `;
+  
+  $('#watchAdTaskBtn').onclick = async () => {
+    const btn = $('#watchAdTaskBtn');
+    btn.disabled = true;
+    btn.innerHTML = `<svg class="ic ic-s spin"><use href="#i-clock"/></svg> Loading Ad...`;
+    
+    await playMonetag();
+    
+    S.u.balances.ton = +(S.u.balances.ton + 0.000005).toFixed(7);
+    S.u.balances.tgr += 200;
+    S.u.balances.boosts += 20;
+    
+    syncBalancesRealtime();
+    await dbPush('users/'+S.tgId+'/history', { 
+      type: 'task', 
+      name: 'Watched Ad Reward', 
+      ton: 0.000005, 
+      tgr: 200, 
+      boosts: 20, 
+      t: now() 
+    });
+    
+    btn.disabled = false;
+    btn.innerHTML = `<svg class="ic ic-s"><use href="#i-play"/></svg> Watch Ad Now`;
+    snd('mega');
+    buzz('success');
+    toast('Rewards claimed: 0.000005 TON, 200 TGR, 20 BOOST!', 'ok');
+  };
+
+  const st=S.u.streak||{last:'',count:0};
+  const can=st.last!==todayKey();
+  $('#streakCard').innerHTML=`
+    <div class="row"><div class="tile">${icon('flame')}</div>
+      <div class="grow"><div class="nb">${st.count||0}-day streak</div>
+      <div class="xs mut">Log in daily — day 7 pays <b style="color:var(--mint)">5,000 TGR</b> + <b style="color:var(--coral)">500 Boosts</b></div></div>
+      <button class="sbtn gold" id="stClaim" ${can?'':'disabled'}>${can?'Claim':'Claimed'}</button></div>
+    <div class="streak">${Array.from({length:7},(_,i)=>`<div class="sd ${st.count>=i+1?'done':''}">${icon('check')}D${i+1}</div>`).join('')}</div>`;
+  $('#stClaim')?.addEventListener('click',async ()=>{
+    const s=S.u.streak||{last:'',count:0};
+    if(s.last===todayKey()) return;
+    s.count=(s.last===yesterKey())?(s.count||0)+1:1; if(s.count>7)s.count=7;
+    s.last=todayKey();
+    const r=STREAK_REW[s.count-1];
+    S.u.balances.tgr+=r.tgr||0; S.u.balances.boosts+=r.boosts||0;
+    
+    syncBalancesRealtime();
+    await saveUser({streak:s});
+    await dbPush('users/'+S.tgId+'/history',{type:'streak',name:`Day ${s.count} streak reward`,tgr:r.tgr||0,boosts:r.boosts||0,t:now()});
+    snd('level'); toast(`Day ${s.count}: +${fmtN(r.tgr)} TGR${r.boosts?` +${r.boosts} Boost`:''}`,'ok');
+    renderTasks();
+  });
+  $('#missionList').innerHTML=MISSIONS.map(m=>{
+    const val=S.u.stats?.[m.stat]||0, done=S.u.tasksDone?.[m.id];
+    const pct=clamp(val/m.target*100,0,100);
+    return `<div class="lrow"><div class="tile">${icon('tasks')}</div>
+      <div class="grow"><div class="nb">${m.name}</div><div class="xs mut">${m.desc}</div>
+        <div style="height:5px;background:#2b2010;border-radius:3px;margin-top:6px;overflow:hidden"><i style="display:block;height:100%;width:${pct}%;background:var(--amber)"></i></div>
+        <div class="xs mut" style="margin-top:3px">+${fmtN(m.rew.tgr)} TGR${m.rew.boosts?` · +${fmtN(m.rew.boosts)} Boost`:''}</div></div>
+      ${done?`<span class="pill g">${icon('check')} Done</span>`
+        :val>=m.target?`<button class="sbtn gold" data-mc="${m.id}">Claim</button>`
+        :`<span class="pill">${Math.min(val,m.target)}/${m.target}</span>`}</div>`;
+  }).join('');
+  $$('#missionList [data-mc]').forEach(b=>b.onclick=async ()=>{
+    const m=MISSIONS.find(x=>x.id===b.dataset.mc);
+    if((S.u.stats?.[m.stat]||0)<m.target||S.u.tasksDone?.[m.id]) return;
+    S.u.tasksDone[m.id]=1;
+    S.u.balances.tgr+=m.rew.tgr||0; S.u.balances.boosts+=m.rew.boosts||0;
+    
+    syncBalancesRealtime();
+    await saveUser({tasksDone:S.u.tasksDone});
+    snd('level'); toast('Mission complete!','ok'); renderTasks();
+  });
+}
+
+async function loadSpecial(){
+  try{
+    const v = await dbGet('specialTasks'); 
+    const arr = v ? Object.entries(v) : [];
+    if(!arr.length){ $('#specialTasks').innerHTML=''; return; }
+    
+    if (!S.u.specialTasksDone) {
+      S.u.specialTasksDone = {};
+    }
+
+    $('#specialTasks').innerHTML = arr.map(([id, t]) => {
+      const isDone = S.u.specialTasksDone[id];
+      const btnText = isDone ? 'Completed' : 'Start';
+      const btnClass = isDone ? 'sbtn' : 'sbtn gold';
+      
+      return `<div class="card"><div class="lrow" style="border:0">
+        <div class="tile">${t.logo ? `<img class="ic" src="${esc(t.logo)}" onerror="this.style.display='none'">` : icon('gift')}</div>
+        <div class="grow">
+          <div class="nb">${esc(t.name || 'Task')}</div>
+          <div class="xs mut">${esc(t.desc || '')}</div>
+          <div class="xs" style="color:var(--mint);margin-top:3px">
+            ${t.ton ? `+${fmtTon(t.ton)} TON ` : ''}
+            ${t.tgr ? `+${fmtN(t.tgr)} TGR ` : ''}
+            ${t.boosts ? `+${fmtN(t.boosts)} Boost` : ''}
+          </div>
+        </div>
+        <button class="${btnClass}" data-stask="${id}">${btnText}</button>
+      </div></div>`;
+    }).join('');
+
+    $$('#specialTasks [data-stask]').forEach(b => {
+      b.onclick = async () => {
+        const taskId = b.dataset.stask;
+        const task = v[taskId];
+        if (!task) return;
+
+        if (S.u.specialTasksDone[taskId]) {
+          if (task.link) {
+            try { tg.openLink(task.link); } catch(e) { window.open(task.link, '_blank'); }
+          }
+          return;
+        }
+
+        b.disabled = true;
+        let timeLeft = 15;
+        b.textContent = `${timeLeft}s`;
+        
+        if (task.link) {
+          try { tg.openLink(task.link); } catch(e) { window.open(task.link, '_blank'); }
+        }
+
+        const timer = setInterval(() => {
+          timeLeft--;
+          b.textContent = `${timeLeft}s`;
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            completeSpecialTask(taskId, task, b);
+          }
+        }, 1000);
+      };
+    });
+  } catch(e) {
+    console.warn('Error loading special tasks:', e);
+  }
+}
+
+async function completeSpecialTask(taskId, task, btnElement) {
+  S.u.specialTasksDone[taskId] = 1;
+  
+  const tgrReward = task.tgr || 0;
+  const boostReward = task.boosts || 0;
+  const tonReward = +(task.ton || 0).toFixed(7);
+  
+  S.u.balances.tgr += tgrReward;
+  S.u.balances.boosts += boostReward;
+  S.u.balances.ton = +(S.u.balances.ton + tonReward).toFixed(7);
+  
+  syncBalancesRealtime();
+  await saveUser({ specialTasksDone: S.u.specialTasksDone });
+  
+  await dbPush('users/' + S.tgId + '/history', {
+    type: 'task',
+    name: `Completed: ${task.name || 'Special Task'}`,
+    tgr: tgrReward,
+    boosts: boostReward,
+    ton: tonReward,
+    t: now()
+  });
+  
+  btnElement.textContent = 'Completed';
+  btnElement.className = 'sbtn';
+  btnElement.disabled = false;
+  
+  snd('level');
+  toast('Task completed! Rewards added.', 'ok');
+}
+
+function refLinkOf(){ return `${CONFIG.BOT_LINK}?startapp=ref_${S.tgId||''}`; }
+function renderRefs(){
+  if(!S.u) return;
+  $('#refLink').value=refLinkOf();
+  $('#refCount').textContent=S.u.refCount||0;
+  $('#refEarnTot').textContent=fmtTon(S.u.refEarn||0);
+  $('#tierBox').innerHTML=CONFIG.COMMISSION.map((c,i)=>`<div class="tier">
+    <div class="tile">${icon('trophy')}</div>
+    <div class="grow"><div class="nb">Tier ${i+1}</div><div class="xs mut">${['Direct friends','Their friends','Third level'][i]}</div></div>
+    <div class="price" style="color:var(--mint)">${Math.round(c*100)}%</div></div>`).join('');
+  
+  loadReferrals();
+  loadRefHistory();
+}
+
+async function loadReferrals() {
+  if (!S.tgId || !S.u) return;
+  let refs = [];
+  try {
+    const refList = S.u.referrals || {};
+    const refIds = Object.keys(refList);
+    
+    if (refIds.length > 0) {
+      const promises = refIds.map(id => dbGet('users/' + id));
+      const results = await Promise.all(promises);
+      refs = results.filter(u => u !== null && u !== undefined).map(u => u);
+    } else {
+      if (fdb) {
+        const snap = await withTimeout(fdb.ref('users').orderByChild('referredBy').equalTo(String(S.tgId)).get(), 'loadRefs');
+        const val = snap.val() || {};
+        refs = Object.entries(val).map(([id, u]) => ({ id, ...u }));
+      } else if (mem.users) {
+        refs = Object.entries(mem.users).filter(([id, u]) => String(u.referredBy) === String(S.tgId)).map(([id, u]) => ({ id, ...u }));
+      }
+    }
+  } catch (e) {
+    console.warn('Error loading referrals', e);
+  }
+  
+  const refListEl = $('#refList');
+  if (!refListEl) return;
+  if (refs.length === 0) {
+    refListEl.innerHTML = `<div class="xs mut" style="text-align:center;padding:16px 0">No referrals yet. Share your link!</div>`;
+  } else {
+    refListEl.innerHTML = refs.map(u => {
+      const initial = (u.name || 'U').charAt(0).toUpperCase();
+      return `
+      <div class="lrow">
+        ${u.photo ? `<img class="av" src="${esc(u.photo)}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">` : ''}
+        <div class="av av-ph" style="${u.photo ? 'display:none' : 'display:flex'}">${initial}</div>
+        <div class="grow">
+          <div class="nb" style="font-size:12px">${esc(u.name || 'Guest')}</div>
+          <div class="xs mut">@${esc(u.username || 'unknown')}</div>
+        </div>
+        <div class="pill g">Active</div>
+      </div>
+    `}).join('');
+  }
+}
+
+async function loadRefHistory() {
+  if (!S.tgId || !S.u) return;
+  let refHist = [];
+  try {
+    const hist = S.u.history ? Object.values(S.u.history) : [];
+    refHist = hist.filter(e => e.type === 'ref').sort((a,b) => (b.t||0) - (a.t||0)).slice(0, 15);
+  } catch(e) {}
+  
+  const refHistEl = $('#refHistList');
+  if (!refHistEl) return;
+  if (refHist.length === 0) {
+    refHistEl.innerHTML = `<div class="xs mut" style="text-align:center;padding:16px 0">No commission earned yet.</div>`;
+  } else {
+    refHistEl.innerHTML = refHist.map(e => {
+      const initial = (e.fromUserName || 'U').charAt(0).toUpperCase();
+      const photo = e.fromUserPhoto || '';
+      return `
+      <div class="lrow">
+        ${photo ? `<img class="av av-sm" src="${esc(photo)}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">` : ''}
+        <div class="av av-ph av-sm" style="${photo ? 'display:none' : 'display:flex'}">${initial}</div>
+        <div class="grow">
+          <div class="nb" style="font-size:12px">${esc(e.fromUserName || 'Unknown User')}</div>
+          <div class="xs mut">${esc(e.name || 'Referral Commission')} · ${e.t ? new Date(e.t).toLocaleDateString() : ''}</div>
+        </div>
+        <div class="price" style="color:var(--mint)">+${fmtTon(e.ton || 0)} TON</div>
+      </div>
+    `}).join('');
+  }
+}
+
+function bindRefActions(){
+  $('#copyRef').onclick=async ()=>{ snd('click');
+    try{ await navigator.clipboard.writeText(refLinkOf()); toast('Invite link copied','ok'); }
+    catch(e){ $('#refLink').select(); document.execCommand('copy'); toast('Invite link copied','ok'); } };
+  $('#shareRef').onclick=()=>{ snd('click');
+    const txt=encodeURIComponent('🐯 Jump with the Tiger and earn TGR & TON!');
+    const url=encodeURIComponent(refLinkOf());
+    try{ tg.openTelegramLink(`https://t.me/share/url?url=${url}&text=${txt}`); }
+    catch(e){ window.open(`https://t.me/share/url?url=${url}&text=${txt}`,'_blank'); } };
+}
+
+function renderBalBox(){
+  if(!S.u) return;
+  const b=S.u.balances||{ton:0,tgr:0,boosts:0};
+  $('#balBox').innerHTML=`
+    <div class="lrow">
+      ${tonImg()}
+      <div class="grow">
+        <div class="row" style="gap:6px; align-items:center;">
+          <div class="nb">TON</div>
+          <button class="sbtn" style="padding:4px 6px;" data-info="ton">${icon('info','ic ic-s')}</button>
+        </div>
+        <div class="xs mut">Toncoin</div>
+      </div>
+      <b style="font-family:'Russo One'">${fmtTon(b.ton)}</b>
+    </div>
+    <div class="lrow">
+      <svg class="ic" style="color:var(--mint)"><use href="#i-tgr"/></svg>
+      <div class="grow">
+        <div class="row" style="gap:6px; align-items:center;">
+          <div class="nb">TGR</div>
+          <button class="sbtn" style="padding:4px 6px;" data-info="tgr">${icon('info','ic ic-s')}</button>
+        </div>
+        <div class="xs mut">Tiger token</div>
+      </div>
+      <b style="font-family:'Russo One';color:var(--mint)">${fmtN(b.tgr)}</b>
+    </div>
+    <div class="lrow">
+      <svg class="ic" style="color:var(--coral)"><use href="#i-bolt"/></svg>
+      <div class="grow">
+        <div class="row" style="gap:6px; align-items:center;">
+          <div class="nb">Boosts</div>
+          <button class="sbtn" style="padding:4px 6px;" data-info="boosts">${icon('info','ic ic-s')}</button>
+        </div>
+        <div class="xs mut">Level up currency</div>
+      </div>
+      <b style="font-family:'Russo One';color:var(--coral)">${fmtN(b.boosts)}</b>
+    </div>`;
+  
+  $$('#balBox [data-info]').forEach(btn => {
+    btn.onclick = () => openInfoSheet(btn.dataset.info);
+  });
+}
+
+function renderWalletUI(){
+  const addr=S.wallet? friendly(S.wallet.account.address):'';
+  $('#wdAddr').textContent=S.wallet? addr:'Not connected';
+  $('#wdCopy').style.display=S.wallet?'flex':'none';
+  $('#wdConnTxt').textContent=S.wallet?'Connected':'Connect TON Wallet';
+  $('#wdDisc').style.display=S.wallet?'flex':'none';
+  renderBalBox();
+}
+
+function renderHist(){
+  if(!S.u) return;
+  const h=S.u.history?Object.values(S.u.history):[];
+  h.sort((a,b)=>(b.t||0)-(a.t||0));
+  $('#histBox').innerHTML=h.length?h.slice(0,12).map(e=>{
+    const ic={ref:'gift',wd:'up',streak:'flame',code:'ticket',task:'play','tgr-gift':'gem'}[e.type]||'clock';
+    const parts=[];
+    if(e.ton) parts.push(`<span style="color:${e.ton>0?'var(--mint)':'var(--coral)'}">${e.ton>0?'+':''}${fmtTon(e.ton)} TON</span>`);
+    if(e.tgr) parts.push(`<span style="color:var(--mint)">${e.tgr>0?'+':''}${fmtN(e.tgr)} TGR</span>`);
+    if(e.boosts) parts.push(`<span style="color:var(--coral)">${e.boosts>0?'+':''}${fmtN(e.boosts)} Boost</span>`);
+    return `<div class="lrow"><div class="tile">${icon(ic)}</div>
+      <div class="grow"><div class="nb" style="font-size:12px">${esc(e.name||e.type)}</div>
+      <div class="xs mut">${e.t?new Date(e.t).toLocaleDateString():''}${e.status?` · ${e.status}`:''}</div></div>
+      <div class="xs" style="text-align:right">${parts.join('<br>')}</div></div>`;
+  }).join(''):`<div class="xs mut" style="padding:14px 0;text-align:center">No history yet</div>`;
+}
+
+function renderFullHist(){
+  if(!S.u) return;
+  const h=S.u.history?Object.values(S.u.history):[];
+  h.sort((a,b)=>(b.t||0)-(a.t||0));
+  $('#fullHistBox').innerHTML=h.length?h.map(e=>{
+    const ic={ref:'gift',wd:'up',streak:'flame',code:'ticket',task:'play','tgr-gift':'gem'}[e.type]||'clock';
+    const parts=[];
+    if(e.ton) parts.push(`<span style="color:${e.ton>0?'var(--mint)':'var(--coral)'}">${e.ton>0?'+':''}${fmtTon(e.ton)} TON</span>`);
+    if(e.tgr) parts.push(`<span style="color:var(--mint)">${e.tgr>0?'+':''}${fmtN(e.tgr)} TGR</span>`);
+    if(e.boosts) parts.push(`<span style="color:var(--coral)">${e.boosts>0?'+':''}${fmtN(e.boosts)} Boost</span>`);
+    return `<div class="lrow"><div class="tile">${icon(ic)}</div>
+      <div class="grow"><div class="nb" style="font-size:12px">${esc(e.name||e.type)}</div>
+      <div class="xs mut">${e.t?new Date(e.t).toLocaleString():''}${e.status?` · ${e.status}`:''}</div></div>
+      <div class="xs" style="text-align:right">${parts.join('<br>')}</div></div>`;
+  }).join(''):`<div class="xs mut" style="padding:14px 0;text-align:center">No history yet</div>`;
+}
+
+function bindWallet(){
+  $('#wdConn').onclick=connectWallet;
+  $('#wdDisc').onclick=disconnectWallet;
+  $('#wdCopy').onclick=async ()=>{ try{ await navigator.clipboard.writeText(friendly(S.wallet.account.address)); toast('Address copied','ok'); }catch(e){} };
+  $('#wdMax').onclick=()=>{ if(S.u) $('#wdAmt').value=S.u.balances.ton.toFixed(7); };
+  $('#wdSwitch').onclick=()=>{ $('#wdSwitch').classList.toggle('on');
+    $('#wdCustomWrap').style.display=$('#wdSwitch').classList.contains('on')?'block':'none'; };
+  $('#openHistBtn').onclick=()=>showView('hist');
+  
+  document.querySelectorAll('[data-info="withdraw"]').forEach(btn => {
+    btn.onclick = () => openInfoSheet('withdraw');
+  });
+
+  $('#wdConfirm').onclick=async ()=>{
+    if(!S.u) return;
+    const h=S.u.history?Object.values(S.u.history):[];
+    const today=todayKey();
+    const hasWithdrawnToday=h.some(e=>e.type==='wd' && new Date(e.t).toISOString().slice(0,10)===today);
+    if(hasWithdrawnToday){ toast('You can only withdraw once per day','err'); return; }
+    
+    const totalWithdrawals = h.filter(e => e.type === 'wd').length;
+    if (totalWithdrawals >= 1) {
+      const buys = S.u.stats?.buys || 0;
+      if (buys === 0) {
+        toast('To withdraw again, you must purchase at least one item from the Store.', 'err');
+        return;
+      }
+    }
+    
+    const amt=parseFloat($('#wdAmt').value);
+    const useCustom=$('#wdSwitch').classList.contains('on');
+    const addr=useCustom? $('#wdCustom').value.trim() : (S.wallet? friendly(S.wallet.account.address):'');
+    if(!addr){ toast(useCustom?'Enter a TON address':'Connect your wallet first','err'); return; }
+    if(!amt||amt<CONFIG.MIN_WITHDRAW){ toast(`Minimum withdraw is ${CONFIG.MIN_WITHDRAW} TON`,'err'); return; }
+    if(amt>S.u.balances.ton){ toast('Not enough TON balance','err'); return; }
+    
+    S.u.balances.ton=+(S.u.balances.ton-amt).toFixed(7);
+    
+    syncBalancesRealtime();
+    await saveUser({ walletAddress: addr });
+    
+    await dbPush('withdrawals', {
+      userId: S.tgId,
+      userName: S.u.name || 'Guest',
+      userUsername: S.u.username || '',
+      amount: amt,
+      address: addr,
+      status: 'pending',
+      t: now()
+    });
+
+    await dbPush('users/'+S.tgId+'/history',{type:'wd',name:'Withdraw request',ton:-amt,status:'pending',t:now()});
+    $('#wdAmt').value='';
+    snd('level'); toast('Withdraw request submitted','ok');
+    renderWalletUI(); renderHist();
+  };
+}
+
+function renderProf(){
+  if(!S.u) return;
+  $('#pName').textContent=S.u.name||'Guest';
+  $('#pUser').textContent=S.u.username?('@'+S.u.username):'—';
+  $('#pLevel').textContent='LVL '+(S.u.level||1);
+  $('#lvNow').textContent=S.u.level||1;
+  $('#lvCost').textContent=fmtN(500*(S.u.level||1));
+  if(S.u.photo){ $('#pAv').src=S.u.photo; $('#pAv').style.display='block'; $('#pAvPh').style.display='none'; }
+  const SETS=[['sound','Sound effects','vol'],['vibration','Vibration','vibe'],['hd','HD graphics','max'],['floats','Floating rewards','gem']];
+  $('#setBox').innerHTML=SETS.map(([k,n,ic])=>`<div class="trow"><div class="tile">${icon(ic)}</div>
+    <div class="grow"><div class="nb" style="font-size:12px">${n}</div></div>
+    <button class="sw ${S.u.settings?.[k]?'on':''}" data-set="${k}"></button></div>`).join('');
+  $$('#setBox [data-set]').forEach(b=>b.onclick=async ()=>{
+    const k=b.dataset.set; S.u.settings[k]=!S.u.settings?.[k];
+    b.classList.toggle('on',S.u.settings[k]);
+    await saveUser({settings:S.u.settings}); snd('click');
+  });
+}
+
+function bindProf(){
+  $('#lvBtn').onclick=async ()=>{
+    if(!S.u) return;
+    const cost=500*(S.u.level||1);
+    if(S.u.balances.boosts<cost){ toast('Not enough Boosts','err'); return; }
+    S.u.balances.boosts-=cost; S.u.level=(S.u.level||1)+1;
+    
+    syncBalancesRealtime();
+    await saveUser({level:S.u.level});
+    snd('level'); toast(`Level ${S.u.level}!`,'ok'); renderProf();
+  };
+  $('#codeBtn').onclick=async ()=>{
+    if(!S.u) return;
+    const code=($('#codeInp').value||'').trim().toUpperCase();
+    if(!code){ toast('Enter a code','err'); return; }
+    const c=await dbGet('codes/'+code);
+    if(!c){ toast('Invalid code','err'); return; }
+    if((c.used||0)>=(c.max||1)){ toast('Code already fully redeemed','err'); return; }
+    S.u.balances.tgr+=c.tgr||0; S.u.balances.boosts+=c.boosts||0;
+    S.u.balances.ton=+(S.u.balances.ton+(c.ton||0)).toFixed(7);
+    
+    syncBalancesRealtime();
+    await dbUpd('codes/'+code,{used:(c.used||0)+1});
+    await dbPush('users/'+S.tgId+'/history',{type:'code',name:'Code '+code,tgr:c.tgr||0,boosts:c.boosts||0,ton:c.ton||0,t:now()});
+    $('#codeInp').value=''; snd('level'); toast('Code redeemed!','ok'); renderBalBox();
+  };
+  $('#rankBtn').onclick=()=>{ showView('rank'); renderRank(); };
+}
+
+async function renderRank(){
+  let top25 = [];
+  let myRank = ">25";
+  
+  try {
+    if(fdb) {
+      const s = await withTimeout(fdb.ref('users').get(), 'rank');
+      const v = s.val() || {};
+      let allUsers = Object.entries(v).map(([id, u]) => ({ id, ...u }));
+      allUsers.sort((a, b) => (b.balances?.tgr || 0) - (a.balances?.tgr || 0));
+      
+      const myIndex = allUsers.findIndex(r => String(r.id) === String(S.tgId));
+      myRank = myIndex !== -1 ? myIndex + 1 : ">25";
+      
+      top25 = allUsers.slice(0, 25);
+    } else if(mem.users) {
+      let allUsers = Object.entries(mem.users).map(([id, u]) => ({ id, ...u }));
+      allUsers.sort((a, b) => (b.balances?.tgr || 0) - (a.balances?.tgr || 0));
+      const myIndex = allUsers.findIndex(r => String(r.id) === String(S.tgId));
+      myRank = myIndex !== -1 ? myIndex + 1 : ">25";
+      top25 = allUsers.slice(0, 25);
+    }
+  } catch(e) {
+    console.warn('Rank error', e);
+  }
+  
+  let myRow = top25.find(r => String(r.id) === String(S.tgId));
+  if (!myRow && S.u) {
+    myRow = { id: S.tgId, name: S.u.name, username: S.u.username, photo: S.u.photo, balances: S.u.balances, level: S.u.level };
+  }
+
+  const myInitial = (myRow?.name || 'U').charAt(0).toUpperCase();
+
+  $('#rankList').innerHTML = `
+    <div class="card" style="margin-bottom: 16px; border-color: var(--amber2); background: var(--panel2);">
+      <div class="row">
+        <div class="tile" style="background: var(--amber); color: #170e01;">${icon('trophy')}</div>
+        <div class="grow">
+          <div class="nb">Your Position</div>
+          <div class="xs mut">${esc(S.u?.name || 'Guest')}</div>
+        </div>
+        <div class="pill a" style="font-size: 14px; padding: 6px 12px;">#${myRank}</div>
+      </div>
+      <div class="row" style="margin-top: 8px; justify-content: space-between; align-items: center;">
+        <div class="xs mut">TGR Balance</div>
+        <div class="nb" style="color: var(--mint);">${fmtN(myRow?.balances?.tgr || 0)}</div>
+      </div>
+    </div>
+    <div class="sec-t"><svg class="ic"><use href="#i-trophy"/></svg>Top 25 by TGR</div>
+    ${top25.length ? top25.map((u, i) => {
+      const rank = i + 1;
+      const initial = (u.name || 'U').charAt(0).toUpperCase();
+      return `
+      <div class="rankrow ${String(u.id) === String(S.tgId) ? 'me' : ''}">
+        <div class="rn ${rank <= 3 ? 'top' : ''}">${rank}</div>
+        ${u.photo ? `<img class="av av-sm" src="${esc(u.photo)}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">` : ''}
+        <div class="av av-ph av-sm" style="${u.photo ? 'display:none' : 'display:flex'}">${initial}</div>
+        <div class="grow">
+          <div class="nb" style="font-size: 12px">${esc(u.name || 'Guest')}</div>
+          <div class="xs mut">@${esc(u.username || 'unknown')}</div>
+        </div>
+        <span class="pill g" style="color: var(--mint); border-color: #1d4234;">${fmtN(u.balances?.tgr || 0)} TGR</span>
+      </div>`;
+    }).join('') : `<div class="xs mut" style="text-align:center;padding:20px 0">Ranking will appear once connected to the network.</div>`}
+  `;
+}
+
+const NAV=[['game','paw','Play'],['store','store','Store'],['tasks','tasks','Tasks'],['refs','users','Refs'],['wallet','wallet','Wallet'],['prof','user','Profile']];
+function buildNav(){
+  $('#nav').innerHTML=NAV.map(([id,ic,n])=>`<button data-nav="${id}">${icon(ic)}<span>${n}</span></button>`).join('');
+  $$('#nav [data-nav]').forEach(b=>b.onclick=()=>{ snd('click'); showView(b.dataset.nav); });
+  $$('#hdr [data-goto]').forEach(b=>b.onclick=()=>showView(b.dataset.goto));
+}
+
+function showView(v){
+  S.view=v;
+  $$('.view').forEach(el=>el.classList.toggle('on',el.id==='v-'+v));
+  $$('#nav [data-nav]').forEach(b=>b.classList.toggle('on',b.dataset.nav===v));
+
+  try{
+    if(tg?.BackButton){
+      if(v === 'game' || v === 'store' || v === 'tasks' || v === 'refs' || v === 'wallet' || v === 'prof') {
+        tg.BackButton.hide();
+      } else {
+        tg.BackButton.show();
+      }
+    }
+  }catch(e){}
+
+  if(v==='store') renderStore();
+  if(v==='tasks'){ renderTasks(); loadSpecial(); }
+  if(v==='refs') renderRefs();
+  if(v==='wallet'){ renderWalletUI(); renderHist(); }
+  if(v==='prof') renderProf();
+  if(v==='game'){ sizeCv(); }
+  if(v==='hist') renderFullHist();
+  if(v==='rank') renderRank();
+}
+
+function openSheet(html){
+  const el=document.createElement('div'); el.className='sheet';
+  el.innerHTML='<div class="sh-bar"></div>'+html;
+  $('#sheets').appendChild(el); $('#shade').classList.add('on'); S.sheets.push(el);
+  return el;
+}
+
+function closeSheet(){ const el=S.sheets.pop(); if(el) el.remove(); if(!S.sheets.length) $('#shade').classList.remove('on'); }
+$('#shade').addEventListener('click',()=>{ while(S.sheets.length) closeSheet(); });
+
+function renderAll(){
+  syncBal(); hudEnergy();
+  renderStore(); renderTasks(); renderRefs(); renderWalletUI(); renderHist(); renderProf();
+  buildNav(); bindRefActions(); bindWallet(); bindProf();
+  const t1=new Image(); t1.src=CONFIG.TON_LOGO; t1.onload=()=>{ const i=$('#tonIco1'); if(i) i.src=CONFIG.TON_LOGO; };
+  startMembershipMonitor();
+  showView('game');
+}
+
+/* ========== INIT ========== */
+tcInit();
+bootstrap();
+loadSpecial();
+</script>
+</body>
+</html>
